@@ -1,0 +1,114 @@
+{%extends 'base.html'%}
+{%load static%}
+
+
+{% block content%}
+<h3 class="text-center">Cart</h3>
+<br>
+{% if cart.item.count > 0 %}
+<div class="my-cart" >
+<div class="container">
+        <div class="row">  
+            <div class="col-1"></div>  
+            <div class="col-10">
+            <table class="table">
+            <tr >
+                <td class="text-center"><strong>Product</strong></td>
+                <td class="text-center"><strong>Quantity</strong></td>
+                <td class="text-center"><strong>Price</strong></td>
+                <td class='text-center'></td>
+            </tr>
+            {% for item in cart.item.all %}
+            <tr id={{ item.product.slug }} >
+                <td class="text-center">{{item.product.title}}</td>
+                <td class="text-center">
+                    <form action="" method="GET">
+                        <input type="number" class="cart-item-qty" data-id="{{ item.id }}" name="qty" value="{{ item.qty}}" min = "1" style="width: 40px">
+                    </form>
+                </td>
+                <td class='text-center' id='cart-item-total-{{ item.id }}'>{{ item.item_total }} $</td>
+                <td class="text-center"><a href='#' class="remove_from_cart" data-slug='{{item.product.slug}}' 
+                    data-id="{{item.product.id}}"><button class="btn btn-default">Remove from cart</button></a></td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td></td>
+                
+                <td><strong>Total:</strong></td>
+                <td  class="text-center" id="cart_total_price"><strong>{{cart.cart_total}} $</strong></td>
+                <td></td>
+            </tr>
+            </table>
+            <a href="{% url 'checkout' %}" class="float-right"  > <button class="btn btn-info">Pre order</button> </a>
+            <div class="col-1"></div> 
+        </div>
+    </div>
+</div>
+
+
+<br>
+<br><br>
+</div>
+<h3 class="cart-empty"></h3>
+{% else %}
+
+<h3 class="text-center">Your cart is empty</h3>
+{% endif %}
+
+
+<script src='{% static "js/jquery.js" %}'></script>
+<script>
+$(document).ready(function(){
+    $(".cart-empty").css("display", 'none')
+    $('.remove_from_cart').on("click", function(e){
+        e.preventDefault()
+        product_slug = $(this).attr('data-slug')
+        item_product_id = $('.cart-item').attr('data-id')
+        console.log(item_product_id)
+        data = {
+            product_slug: product_slug
+        }
+        $.ajax({
+            type: "GET",
+            url: '{% url "remove_from_cart" %}',
+            data: data,
+            success: function(data){
+                $('#cart_count').html(data.cart_total)
+                $('#'+product_slug).remove()
+                $('#cart_total_price').html("<strong>"+parseFloat(data.cart_total_price).toFixed(2) + '$ </strong>')
+                if (parseInt(data.cart_total)==0){
+                    $(".my-cart").css("display", 'none')
+                    $(".cart-empty").css("display", 'block')
+                    $(".cart-empty").html('<h3 class="text-center">Your cart is empty</h3>')
+                }
+            }
+        })
+
+    })
+})
+$(document).ready(function(){
+        $('.cart-item-qty').on("click", function(){
+        //debugger;
+            let qty = $(this).val()
+            let item_id = $(this).attr("data-id")
+
+            data = {
+                qty: qty,
+                item_id: item_id
+            }
+            console.log(data)
+            $.ajax({
+                type: "GET",
+                url: "{% url 'change_item_qty'%}",
+                data: data,
+                success: function(data){
+                    $("#cart-item-total-"+item_id).html(parseFloat(data.item_total).toFixed(2) + '$')
+                    $('#cart_total_price').html("<strong>"+parseFloat(data.cart_total_price).toFixed(2) + '$ </strong>')
+                }
+
+            })
+        })
+})
+</script>
+
+{% endblock content%}

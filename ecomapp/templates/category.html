@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{%load static%}
+{%block content%}
+<div class="col-12">
+    <h2 class="text-center"> {{ category.name }} </h2>
+    <hr>
+    <div class="row align-items-start">
+        {% for product in products_of_category %}
+        <div class="col-sm-4">
+                <a   href="{{ product.get_absolute_url }} ">
+                <div class="text-center">
+                    <img class="img-responsive" src='{{ product.image.url }}' style="height: 300px" >
+                </div>
+                </a>
+                <div class="text-center">
+                        <a   href="{{ product.get_absolute_url }} ">
+                    <h5 class="text-center">{{product.title}}</h5> </a>
+                    
+                    {% if request.user.is_authenticated %}
+                    <p class='text-center'>
+                            <a href='#' class='add_to_cart' data-slug='{{ product.slug }}'>
+                              <button class='btn btn-danger' style="border-radius: 1em/1em">Add to bin</button>
+                            </a>
+                          </p>
+                        {% endif %}
+                        {% if not request.user.is_authenticated %}
+                        <p class = 'text-center'> Only authorized users can order goods. You are welcome,
+                            <a href='{% url "login" %}'> sign in </a> or <a href='{% url "registration" %}'> sign up </a>
+                        </p>
+                {% endif %}
+                </div>                
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<script src='{% static "js/jquery.js" %}'></script>
+<script>
+$(document).ready(function(){
+    $('.add_to_cart').on("click", function(e){
+        e.preventDefault()
+        product_slug = $(this).attr('data-slug')
+        data = {
+            product_slug: product_slug
+        }
+        $.ajax({
+            type: "GET",
+            url: '{% url "add_to_cart" %}',
+            data: data,
+            success: function(data){
+                $('#cart_count').html(data.cart_total)
+            }
+        })
+    })
+})
+</script>
+
+{%endblock content%}

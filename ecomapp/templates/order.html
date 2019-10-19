@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<form action='{% url "make_order" %}' method="POST">
+		{% csrf_token %}
+		<!-- {{ form|crispy }} -->
+		
+		<div class="row" >
+			<div class="col-sm-4">
+				{{ form.name|as_crispy_field }}
+			</div>
+			<div class="col-sm-4">
+				{{ form.last_name|as_crispy_field }}
+			</div>
+			<div class="col-sm-4">
+				{{ form.phone|as_crispy_field }}
+			</div>
+		</div>
+
+		<div class="row" >
+			<div class="col-sm-4" id="card_number">
+				{{ form.card_number|as_crispy_field }}
+			</div>
+			<div class="col-sm-4" id="expiry_date">
+				{{ form.expiry_date|as_crispy_field }}
+			</div>
+			<div class="col-sm-4" id="card_code">
+				{{ form.card_code|as_crispy_field }}
+			</div>
+		</div>
+	
+	{{ form.address|as_crispy_field }}
+	{{ form.city|as_crispy_field }}
+	{{ form.country|as_crispy_field }}
+	{{ form.date|as_crispy_field }}
+
+
+	{{ form.zipcode|as_crispy_field }}
+	{{ form.NameonCard|as_crispy_field }}
+	{{ form.CreditCardType|as_crispy_field }}
+	{{ form.comments|as_crispy_field }}
+
+	<div id="myModal" class="modal fade" tabindex="-1"	>
+			<!-- tabindex="-1" role="dialog" -->
+			<div class="modal-dialog" >
+			  <div class="modal-content">
+				<div class="modal-header">
+					<button  class="close" data-dismiss="modal">x</button>
+					<h5 class="modal-title">Erorr</h5>
+				</div>
+				<div class="modal-body">
+				{% for field in form %}
+					{% for error in field.errors %}		
+						<p>{{ error|escape }}</p>
+					{% endfor %}
+				{% endfor %}
+				</div>
+				<div class="modal-footer">
+					<button class="close btn btn-secondary" data-dismiss="modal">
+						Close
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!-- data-toggle="modal" data-target="#myModal" -->
+<input id="btnEr" type='submit'  class='btn btn-success'  value='Оформить заказ' ><br><br>
+</form>
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src='{% static "js/bootstrap.js" %}'></script> 
+{% if form.errors %}
+<script>
+$('#myModal').modal('show');
+</script>
+{% endif %}
+<script>
+	$(document).ready(function(){
+		$('#id_date_month').css('width', '150px')
+		$('#id_date_month').css('display', 'inline')
+		$('#id_date_year').css('width', '100px')
+		$('#id_date_year').css('display', 'inline')
+		$('#id_date_day').css('width', '70px').css('display', 'inline')
+		$('#div_id_phone').css('width', '20px').css('display', 'inline')
+		$('#div_id_name').css('width', '20px').css('display', 'inline')
+		$('#div_id_last_name').css('width', '20px').css('display', 'inline')
+		
+
+	})
+
+</script>
+
+
+{% endblock content%}

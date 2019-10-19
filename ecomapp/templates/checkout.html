@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<h3 class='text-center'>Your reservation</h3>
+<br>
+<div class="container">
+    <div class="row">  
+        <div class="col-1"></div>  
+        <div class="col-10">         
+        <table class='table'>
+        <tr>
+            <td class='text-center'><strong>Product</strong></td>
+            <td class='text-center'><strong>Amount</strong></td>
+            <td class='text-center'><strong>Price</strong></td>
+            <td class='text-center'></td>
+        </tr>
+        {% for item in cart.item.all %}
+        <tr>
+            <td class='text-center'>{{ item.product.title }}</td>
+            <td class="text-center">{{ item.qty }}</td>
+            <td class='text-center'>{{ item.item_total }} $</td>
+            <td></td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td></td>
+            <td class='text-center'> <strong>Total: </strong></td>
+            <td class='text-center'><strong>{{ cart.cart_total }} $</strong></td>
+            <td class='text-center'></td>
+        </tr>
+        </table>
+        <div class="col-1"></div> 
+        <a href='{% url "create_order" %}' class='float-right'><button class='btn btn-success'>Checkout</button></a>
+        <br><br>
+        </div>
+    </div>
+</div>
+{% endblock content %}

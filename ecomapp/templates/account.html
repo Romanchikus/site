@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{%load static%}
+{%block content%}
+<h3 class="text-center" >Account user ' {{ request.user }} '</h3>
+<hr>
+<h4 class='text-center'>Your orders</h4>
+<table class='table'>
+<tr style='background:rgba(240, 151, 109, 0.966);'>
+	<td class = 'text-center'> Order number </td>
+	<td class = 'text-center'> Order Date </td>
+	<td class = 'text-center'> Order Status </td>
+	<td class = 'text-center'> Order Cost </td>
+	<td class = 'text-center'> Order Details </td>
+	<td></td>
+</tr>
+{% for item in order %}
+<tr>
+	<td class='text-center' style='padding-top: 20px; padding-bottom: 20px;'>{{ item.id }}</td>
+	<td class='text-center' style='padding-top: 20px; padding-bottom: 20px;'>{{ item.date }}</td>
+	<td class='text-center' style='padding-top: 20px; padding-bottom: 20px;'>{{ item.status }}</td>
+	<td class='text-center' style='padding-top: 20px; padding-bottom: 20px;'>{{ item.total }} $</td>
+	<td class='text-center' style='padding-top: 20px; padding-bottom: 20px;'><button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#myModal-{{ item.id }}">
+  Детали заказа
+</button></td>
+</tr>
+{% endfor %}
+</table>
+
+{%endblock content%}
