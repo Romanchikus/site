@@ -4,7 +4,6 @@ from django.utils.text import slugify
 from django.urls import reverse
 from decimal import Decimal
 from django.conf import settings
-from cities_light.models import City,Country
 from django_countries.fields import CountryField
 
 class Category(models.Model):
