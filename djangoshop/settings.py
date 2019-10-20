@@ -41,12 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
-    'cities_light',
 ]
-
-CITIES_LIGHT_TRANSLATION_LANGUAGES = ['fr', 'en']
-CITIES_LIGHT_INCLUDE_COUNTRIES = ['FR','UA','RU']
-CITIES_LIGHT_INCLUDE_CITY_TYPES = ['PPL', 'PPLA', 'PPLA2', 'PPLA3', 'PPLA4', 'PPLC', 'PPLF', 'PPLG', 'PPLL', 'PPLR', 'PPLS', 'STLMT',]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
