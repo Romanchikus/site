@@ -3,7 +3,6 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from ecomapp.Card import CreditCardField, ExpiryDateField, VerificationValueField
 from ecomapp.models import Order
-from django_countries.fields import CountryField
 
 
 class LoginForm(forms.Form):
@@ -71,13 +70,14 @@ class OrderForm(forms.Form):
 	last_name = forms.CharField(required=True)
 	phone = forms.CharField()
 	date = forms.DateField(widget=forms.SelectDateWidget(), initial=timezone.now())
-	card_number = CreditCardField(placeholder=u'0000 0000 0000 0000', min_length=12, max_length=19)
+	# card_number = CreditCardField(placeholder=u'0000 0000 0000 0000', min_length=12, max_length=19)
+	card_number = forms.CharField()
 	expiry_date = ExpiryDateField(required=True)
 	card_code = VerificationValueField()
 	address = forms.CharField(required=True)
 	comments = forms.CharField(widget=forms.Textarea, required=False)
 	city = forms.CharField(required=True)
-	country = CountryField().formfield()
+	country = forms.CharField(required=True)
 	zipcode = forms.CharField(required=True)
 	NameonCard = forms.CharField(required=True,widget=forms.TextInput(attrs={'placeholder': 'Name Surname'}))
 	CreditCardType = forms.CharField(required=True,widget=forms.TextInput(attrs={'placeholder': 'mastercard'}))
@@ -102,3 +102,17 @@ class OrderForm(forms.Form):
 		self.fields ['date']. label = 'Delivery Date'
 		self.fields ['card_number']. label = 'Card number'
 		self.fields ['date']. help_text = 'Delivery is made on the next day after placing the order. The manager will contact you first! '
+
+
+class CommentForm(forms.Form):
+
+	comment = forms.CharField(required=True, min_length=12)
+	
+
+	def __init__(self, *args, **kwargs):
+		super(CommentForm, self).__init__(*args, **kwargs)
+
+		# self.fields['name'].widget.attrs.update({'div' : 'label'})
+		# self.fields['last_name'].widget.attrs.update({'div' : 'label'})
+		self.fields['comment'].label = 'Your comment'
+		

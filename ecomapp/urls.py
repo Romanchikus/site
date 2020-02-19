@@ -15,6 +15,7 @@ from ecomapp.views import (base_view,
      account_view,
      registration_view,
      login_view,
+     add_comment,
     )
 
 
@@ -35,6 +36,7 @@ urlpatterns = [
     re_path(r'^registration/$', registration_view, name = 'registration'),
     re_path(r'^login/$', login_view, name = 'login'),
     re_path(r'^logout/$', LogoutView.as_view(next_page=reverse_lazy('base')), name='logout'),
+    re_path(r'^add_comment/$', add_comment, name = 'add_comment'),
     # re_path(r'^order_make/$', make_order_card, name = 'make_order_card'),
     
 ]   

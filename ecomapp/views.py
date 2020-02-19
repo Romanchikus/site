@@ -1,9 +1,9 @@
 from django.shortcuts import render
-from ecomapp.models import Category, Product, CartItem, Cart, Order
+from ecomapp.models import Category, Product, CartItem, Cart, Order,Comment
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from decimal import Decimal
-from ecomapp.forms import OrderForm, RegistrationForm, LoginForm
+from ecomapp.forms import OrderForm, RegistrationForm, LoginForm, CommentForm
 from django.contrib.auth import login, authenticate
 
 import urllib.request
@@ -48,6 +48,7 @@ def product_view(request, product_slug):
         request.session['cart_id'] = cart_id
         cart = Cart.objects.get(id = cart_id)
     product = Product.objects.get(slug = product_slug)
+    form = CommentForm(request.POST or None)
     images = product.images.all()
     if not images:
         images = False
@@ -56,10 +57,52 @@ def product_view(request, product_slug):
         'product': product,
         'categories': categories,
         'cart': cart,
+        'images': images,
+        'form': form
+
+    }
+    
+    return render(request, "product.html", context)
+
+def add_comment(request):
+    try:
+        cart_id=request.session['cart_id']  
+        cart = Cart.objects.get(id=cart_id)
+        request.session['total'] = cart.item.count()
+    except:
+        cart = Cart()
+        cart.save()
+        cart_id = cart.id
+        request.session['cart_id'] = cart_id
+        cart = Cart.objects.get(id = cart_id)
+    # form = CommentForm(request.POST or None)
+    product_slug = request.GET.get("product_slug")
+    comment = request.GET.get("txt")
+    print(comment)
+    # print(product_slug)
+    product = Product.objects.get(slug = product_slug)
+    # product = Product.objects.get(slug = product_slug)
+    if comment:
+        print('form.is_valid    ')
+        # comment = form.cleaned_data['comment']
+        
+        product.add_comment(comment,cart_id)
+        product.save()
+        
+    else:
+        print('form.is_INvalid    ')
+
+    categories = Category.objects.all()
+    images = product.images.all()
+    context = {
+        'product': product,
+        'categories': categories,
+        'cart': cart,
         'images': images
 
     }
     return render(request, "product.html", context)
+
 
 def category_view(request, category_slug):
     category = Category.objects.get(slug = category_slug)
