@@ -4,6 +4,7 @@ from django.utils.text import slugify
 from django.urls import reverse
 from decimal import Decimal
 from django.conf import settings
+from django.utils import timezone
 
 class Category(models.Model):
     name = models.CharField(max_length =110)
@@ -58,12 +59,15 @@ class Product(models.Model):
     comment = models.ManyToManyField(Comment,  blank = True)
     objects = ProductManager()
 
-    def add_comment(self,comment,author):
+    def add_comment(self,comment,author, slug):
         product = self
-        new_item, _ = Comment.objects.get_or_create(comments=comment, author=author )
-        if new_item not in product.comment.all():
+        
+        if not Comment.objects.filter(author=author, slug = slug).exists():
+            new_item, _ = Comment.objects.get_or_create(comments=comment, author=author, slug=slug )
             product.comment.add(new_item)
             product.save()
+            print('save comment))')
+
     def __str__(self):
         return self.title   
     def get_absolute_url(self):
@@ -160,3 +164,54 @@ class Order(models.Model):
 
     def __unicode__(self):
         return "Order № {0}".format(str(self.id))
+
+class Member(models.Model):
+    objects = models.Manager()
+    member = models.CharField(max_length=20, unique=True)
+    admin = models.BooleanField(default=False)
+    # def add_member(self, member):
+    #     member, _ = Member.objects.get_or_create(member=member)
+    #     member.save
+    #     return member
+    
+
+class Messages(models.Model):
+    # objects = models.Manager()
+    member = models.CharField(max_length=20, default='')
+    message = models.TextField(verbose_name= ("Сообщение"),default='')
+    pub_date = models.DateTimeField(verbose_name= ('Дата сообщения'), default=timezone.now)
+
+
+class Chat(models.Model):
+    id = models.AutoField(primary_key=True)
+    messages = models.ManyToManyField(Messages)
+    member = models.ForeignKey(Member, on_delete=models.PROTECT, default="")
+
+    # def view_chat(self,member):
+    #     chat = self
+    #     new_item, _ = Member.objects.get_or_create(member=member)
+    #     chat.member.add(new_item)
+    #     chat.save()
+    #     print('add user))')
+    #     chat = chat.obj
+    #     return 
+        
+
+        
+    def send_message(self, member,message):
+        chat = self
+        new_message = Messages.objects.create(message=message,member=member)
+        chat.messages.add(new_message)
+        chat.save()
+        print('save mess')
+        
+    def __str__(self):
+        return str(self.id)
+
+    def get_absolute_url(self):
+        return reverse('chat_detail', kwargs= {'chat_id': str(self.id)})
+
+
+
+
+    

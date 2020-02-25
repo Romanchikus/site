@@ -18,7 +18,7 @@
     {% for chat in chats %}
     <tr>
         <td><strong class="comment-title"> Anonim {{ chat.member }} </strong></td>
-        <td></strong> <br> <strong class='comment-same'> {{ chat.get_absolute_url }}</strong></td>
+        <td></strong> <br> <strong class='comment-same'> <a href="{{ chat.get_absolute_url }}">{{ chat.get_absolute_url }}</a> </strong></td>
     </tr>   
     {% endfor %}
 </table>  
@@ -32,18 +32,20 @@
         User
     </th>
     <th scope="col">
-        Comment
+        Message
     </th>
 </tr>
 </thead>
+{%if mess%}
     {% for message in chat.messages.all %}
     
     <tr>
-            <td><strong class="comment-title"> Anonim {{ message.member }} </strong></td>
-                <td></strong> <br> <strong class='comment-same'> {{ message.message }}</strong></td>
-                <td></strong> <br> <strong class='comment-same'> {{ message.pub_date }}</strong></td>
+        <td><strong class="comment-title"> Anonim {{ message.member }} </strong></td>
+        <td></strong> <br> <strong class='comment-same'> {{ message.message }}</strong></td>
+        <td></strong> <br> <strong class='comment-same'> {{ message.pub_date }}</strong></td>
     </tr>
     {% endfor %}
+    {%endif%}
     <div >
         
     </div>

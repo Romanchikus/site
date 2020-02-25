@@ -304,46 +304,30 @@ def login_view(request):
     }
     return render(request, 'login.html', context)
 def add_comment(request):
-    # try:
-    #     cart_id=request.session['cart_id']  
-    #     cart = Cart.objects.get(id=cart_id)
-    #     request.session['total'] = cart.item.count()
-    # except:
-    #     cart = Cart()
-    #     cart.save()
-    #     cart_id = cart.id
-    #     request.session['cart_id'] = cart_id
-    #     cart = Cart.objects.get(id = cart_id)
-    # form = CommentForm(request.POST or None)
-    # print('restf')
+
     product_slug = request.GET.get("product_slug")
     comment = request.GET.get("txt")
-    # print(comment)
-    # print(product_slug)
+
     product = Product.objects.get(slug = product_slug)
-    # product = Product.objects.get(slug = product_slug)
     if comment:
-        # print(request.session.session_key)
-        # comment = form.cleaned_data['comment']
         user_id = request.session.session_key
         product.add_comment(comment,user_id,product_slug)
         
     else:
         print('form.is_INvalid')
 
-    # categories = Category.objects.all()
-    # images = product.images.all()
-    # context = {
-    #     'product': product,
-    #     'categories': categories,
-    #     'cart': cart,
-    #     'images': images
-
-    # }
     return JsonResponse({'auth_id': str(user_id),  
         'last_comm': str(comment)})
 
 def chat_view(request):
+    member_id = request.session.session_key
+    print('-------', member_id)
+    try:
+        member = Member.objects.get(member=member_id)
+    except:
+        member = Member(member=member_id)
+        member.save()
+
     if request.user.is_superuser:
         chats = Chat.objects.all()
 
@@ -351,36 +335,23 @@ def chat_view(request):
         return render(request, "chat_view.html", context)
     else:
         try:
-            member_id = request.session.session_key
-            member = Member.objects.get(member=member_id)
             chat = Chat.objects.get(member=member) 
         except:
-            member_id = request.session.session_key
-            member = Member(member=member_id)
-            member.save()
             chat = Chat(member=member)
             chat.save()
-            member = Member.objects.get(member=member_id)
-            chat = Chat.objects.get(member=member) 
+            # member = Member.objects.get(member=member_id)
             print('Erorr')
-
-        context = {'chat':  chat}
+        
+        mess = Messages.objects.filter(member= member).exists()
+        print(mess)
+        context = {'chat':  chat, 'mess': mess}
         return render(request, "chat_view.html", context)
 
 def send_message(request):
-
     member_id = request.session.session_key
-    try:
-        member = Member.objects.get(member=member_id)
-        chat = Chat.objects.get(member=member) 
-    except:
-        member = Member(member=member_id)
-        member.save()
-        chat = Chat(member=member)
-        chat.save()
-        member = Member.objects.get(member=member_id)
-        chat = Chat.objects.get(member=member) 
-
+    print('-------', member_id)
+    member = Member.objects.get(member=member_id)
+    chat = Chat.objects.get(member=member) 
     message = request.GET.get("message")
     chat.send_message(member,message)
     return JsonResponse({'member': str(member_id),  

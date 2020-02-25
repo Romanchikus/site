@@ -41,6 +41,7 @@ urlpatterns = [
     re_path(r'^add_comment/$', add_comment, name = 'add_comment'),
     re_path(r'^chat_view/$', chat_view, name = 'chat_view'),
     re_path(r'^send_message/$', send_message, name = 'send_message'),
+    re_path(r'^chat_view/(?P<chat_id>[-\w]+)/$', chat_view, name = 'chat_detail'),
 
     
     # re_path(r'^dialogs/$', login_required(views.DialogsView.as_view()), name='dialogs'),
