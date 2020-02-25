@@ -57,6 +57,27 @@
         <a href='#' class='add_to_cart' data-slug='{{ product.slug }}'>
             <button class='btn btn-danger'>Add to bin</button>
         </a>
+<<<<<<< HEAD
+=======
+        <table>
+            {% for comment in product.comment.all %}
+            <br>
+            <tr>
+                    <strong>  {{ comment.comments }} -+= {{ comment.author }} </strong>
+            </tr>
+            {% endfor %}
+            <tr class="last_comm">
+                <strong> </strong>
+            </tr>
+        </table>
+        <form action="" method="GET">
+                <input id="example" type="text"  name="Ntext" size="20">
+                <a href='#' class="add_comment" data-slug='{{product.slug}}' 
+                data-id="{{product.id}}"><button class="btn btn-default">Add comment</button></a>
+        </form>
+        
+       
+>>>>>>> e46b1544cd5b4da57dd1560d8bde52c97e54440e
     </div>
     <div class="col-sm-4"   >
         <br>
@@ -131,16 +152,24 @@ $(document).ready(function(){
             product_slug: product_slug,
             txt: txt
         }
+<<<<<<< HEAD
         // location.reload();
+=======
+        location.reload();
+>>>>>>> e46b1544cd5b4da57dd1560d8bde52c97e54440e
         $.ajax({
             type: "GET",
             url: '{% url "add_comment" %}',
             data: data,
             success: function(data){
+<<<<<<< HEAD
                 $('.dedd').append('<tr ><td><strong class="comment-title"id="last_mem">'
                     + data.auth_id+' </strong> </td>'+ 
                 '<td></strong> <br> <strong id="comment-same">'+ data.last_comm + '</strong></td>',+
                 '<td></strong> <br> <strong class="comment-same"> </strong></td></tr>')
+=======
+                $('#last_comm').html("<strong>"+data.auth_id + '$  ' , data.last_comm+ '$ </strong>')
+>>>>>>> e46b1544cd5b4da57dd1560d8bde52c97e54440e
 
             }
         })
