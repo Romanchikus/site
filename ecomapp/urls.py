@@ -15,6 +15,9 @@ from ecomapp.views import (base_view,
      account_view,
      registration_view,
      login_view,
+     add_comment,
+     chat_view,
+     send_message,
     )
 
 
@@ -35,6 +38,14 @@ urlpatterns = [
     re_path(r'^registration/$', registration_view, name = 'registration'),
     re_path(r'^login/$', login_view, name = 'login'),
     re_path(r'^logout/$', LogoutView.as_view(next_page=reverse_lazy('base')), name='logout'),
-    # re_path(r'^order_make/$', make_order_card, name = 'make_order_card'),
+    re_path(r'^add_comment/$', add_comment, name = 'add_comment'),
+    re_path(r'^chat_view/$', chat_view, name = 'chat_view'),
+    re_path(r'^send_message/$', send_message, name = 'send_message'),
+
+    
+    # re_path(r'^dialogs/$', login_required(views.DialogsView.as_view()), name='dialogs'),
+    # re_path(r'^dialogs/create/(?P<user_id>\d+)/$', login_required(views.CreateDialogView.as_view()), name='create_dialog'),
+    # re_path(r'^dialogs/(?P<chat_id>\d+)/$', login_required(views.MessagesView.as_view()), name='messages'),
+    # # re_path(r'^order_make/$', make_order_card, name = 'make_order_card'),
     
 ]   

@@ -4,12 +4,11 @@ from django.utils.text import slugify
 from django.urls import reverse
 from decimal import Decimal
 from django.conf import settings
-from django_countries.fields import CountryField
 
 class Category(models.Model):
     name = models.CharField(max_length =110)
     slug = models.SlugField(blank=True)
-    objects = models.Manager()
+    objects = models.Manager()  
 
     def __str__(self):
         return self.name
@@ -25,12 +24,12 @@ pre_save.connect(pre_save_category_slug, sender=Category)
 
 
 
-class Brand(models.Model):
-    name = models.CharField(max_length =110)
+# class Brand(models.Model):
+#    name = models.CharField(max_length =110)
 
 
-    def __str__(self):
-        return self.name
+#    def __str__(self):
+#       return self.name
 
 def image_folder(instance, filename):
     filename = instance.slug +'.'+ filename.split('.')[1]
@@ -41,38 +40,53 @@ class ProductManager(models.Manager):
     def all(self, *args, **kwargs):
         return super(ProductManager, self).get_queryset().filter(availeble=True)
 
-
+class Comment(models.Model):
+    objects = models.Manager()
+    slug = models.SlugField()
+    author = models.CharField(max_length= 120)
+    comments = models.TextField()
 
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
-    brand = models.ForeignKey(Brand, on_delete=models.PROTECT)
+    # brand = models.ForeignKey(Brand, on_delete=models.PROTECT)
     title = models.CharField(max_length= 120)
     slug = models.SlugField()
     description = models.TextField()
     image = models.ImageField(upload_to = image_folder)
     price = models.DecimalField(max_digits=9, decimal_places=2)
     availeble = models.BooleanField(default=True)
+    comment = models.ManyToManyField(Comment,  blank = True)
     objects = ProductManager()
+
+    def add_comment(self,comment,author):
+        product = self
+        new_item, _ = Comment.objects.get_or_create(comments=comment, author=author )
+        if new_item not in product.comment.all():
+            product.comment.add(new_item)
+            product.save()
     def __str__(self):
-        return self.title    
+        return self.title   
     def get_absolute_url(self):
         return reverse('product_detail', kwargs= {'product_slug': self.slug})
+
+
+
+
 
 class Image(models.Model):
     slug = models.SlugField()
     image = models.ImageField(upload_to = image_folder)
     product = models.ForeignKey(Product, default=None, related_name='images',on_delete=models.PROTECT)
-    
+        
 
 
-class CartItem(models.Model):           
-
-	product = models.ForeignKey(Product, on_delete=models.PROTECT)
-	qty = models.PositiveIntegerField(default=1)
-	item_total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
-
-	def __unicode__(self):
-		return "Cart item for product {0}".format(self.product.title)
+class CartItem(models.Model):         
+    objects = models.Manager()
+    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    qty = models.PositiveIntegerField(default=1)
+    item_total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
+    def __unicode__(self):
+        return "Cart item for product {0}".format(self.product.title)
 
 
 
@@ -91,7 +105,7 @@ class Cart(models.Model):
             cart.item.add(new_item)
             cart.save()
 
-    
+        
     def remove_from_cart(self, product_slug):
         cart = self
         product = Product.objects.get(slug = product_slug)
@@ -101,9 +115,9 @@ class Cart(models.Model):
                 cart.save()
     def change_qty(self, qty, item_id, cart_item):
         cart = self
-        print(int(qty))
+        # print(int(qty))
         cart_item.qty = int(qty)
-        cart_item.item_total = int(qty)*Decimal(cart_item.product.price)
+        cart_item.item_total = int(cart_item.qty)*Decimal(cart_item.product.price)
         cart_item.save()
         new_cart_total = 0.00
         for item in cart.item.all():
@@ -128,7 +142,7 @@ class Order(models.Model):
     email = models.EmailField(max_length=254)
     address  = models.CharField(max_length=254)
     city = models.CharField(max_length=254)
-    country = CountryField(multiple=True)
+    country = models.CharField(max_length=254)
     zipcode = models.CharField(max_length=10)
     card_number = models.CharField(max_length=20)
     expiry_date = models.CharField(max_length=20)
@@ -138,11 +152,11 @@ class Order(models.Model):
     CreditCardType = models.CharField(max_length=20)
 
     phone = models.CharField(max_length=20)
-    
+        
     date = models.DateTimeField(auto_now_add=True)
     comments = models.TextField()
     status = models.CharField(max_length=200, choices=ORDER_STATUS_CHOICES)
-    
+        
 
     def __unicode__(self):
         return "Order № {0}".format(str(self.id))

@@ -1,9 +1,9 @@
 from django.shortcuts import render
-from ecomapp.models import Category, Product, CartItem, Cart, Order
+from ecomapp.models import Category, Product, CartItem, Cart, Order,Comment, Messages,Chat,Member
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from decimal import Decimal
-from ecomapp.forms import OrderForm, RegistrationForm, LoginForm
+from ecomapp.forms import OrderForm, RegistrationForm, LoginForm, CommentForm
 from django.contrib.auth import login, authenticate
 
 import urllib.request
@@ -48,6 +48,7 @@ def product_view(request, product_slug):
         request.session['cart_id'] = cart_id
         cart = Cart.objects.get(id = cart_id)
     product = Product.objects.get(slug = product_slug)
+    form = CommentForm(request.POST or None)
     images = product.images.all()
     if not images:
         images = False
@@ -56,10 +57,15 @@ def product_view(request, product_slug):
         'product': product,
         'categories': categories,
         'cart': cart,
-        'images': images
+        'images': images,
+        'form': form
 
     }
+    
     return render(request, "product.html", context)
+
+
+
 
 def category_view(request, category_slug):
     category = Category.objects.get(slug = category_slug)
@@ -297,5 +303,88 @@ def login_view(request):
         'form': form
     }
     return render(request, 'login.html', context)
+def add_comment(request):
+    # try:
+    #     cart_id=request.session['cart_id']  
+    #     cart = Cart.objects.get(id=cart_id)
+    #     request.session['total'] = cart.item.count()
+    # except:
+    #     cart = Cart()
+    #     cart.save()
+    #     cart_id = cart.id
+    #     request.session['cart_id'] = cart_id
+    #     cart = Cart.objects.get(id = cart_id)
+    # form = CommentForm(request.POST or None)
+    # print('restf')
+    product_slug = request.GET.get("product_slug")
+    comment = request.GET.get("txt")
+    # print(comment)
+    # print(product_slug)
+    product = Product.objects.get(slug = product_slug)
+    # product = Product.objects.get(slug = product_slug)
+    if comment:
+        # print(request.session.session_key)
+        # comment = form.cleaned_data['comment']
+        user_id = request.session.session_key
+        product.add_comment(comment,user_id,product_slug)
+        
+    else:
+        print('form.is_INvalid')
+
+    # categories = Category.objects.all()
+    # images = product.images.all()
+    # context = {
+    #     'product': product,
+    #     'categories': categories,
+    #     'cart': cart,
+    #     'images': images
+
+    # }
+    return JsonResponse({'auth_id': str(user_id),  
+        'last_comm': str(comment)})
+
+def chat_view(request):
+    if request.user.is_superuser:
+        chats = Chat.objects.all()
+
+        context = {'chats':  chats}
+        return render(request, "chat_view.html", context)
+    else:
+        try:
+            member_id = request.session.session_key
+            member = Member.objects.get(member=member_id)
+            chat = Chat.objects.get(member=member) 
+        except:
+            member_id = request.session.session_key
+            member = Member(member=member_id)
+            member.save()
+            chat = Chat(member=member)
+            chat.save()
+            member = Member.objects.get(member=member_id)
+            chat = Chat.objects.get(member=member) 
+            print('Erorr')
+
+        context = {'chat':  chat}
+        return render(request, "chat_view.html", context)
+
+def send_message(request):
+
+    member_id = request.session.session_key
+    try:
+        member = Member.objects.get(member=member_id)
+        chat = Chat.objects.get(member=member) 
+    except:
+        member = Member(member=member_id)
+        member.save()
+        chat = Chat(member=member)
+        chat.save()
+        member = Member.objects.get(member=member_id)
+        chat = Chat.objects.get(member=member) 
+
+    message = request.GET.get("message")
+    chat.send_message(member,message)
+    return JsonResponse({'member': str(member_id),  
+        'message': str(message)})
+
 
 

@@ -69,12 +69,14 @@
           <li>
               <a class="ti" href="{% url 'logout' %}">Logout</a>
             </li>
+            {% endif %}
           <div class="navbar-nav ml-auto">
+          
           <li>
             <a class="nav-link" href= "{% url 'cart' %}">Cart <span class="badge badge-success" id="cart_count">{{ cart.item.count }}</span></a>
           </li>
         </div>
-        {% endif %}
+        
 
       <div class="" id="navbarResponsive">
         
@@ -148,7 +150,12 @@
     <!-- /.row -->
     
     <!-- /.row -->
-    
+    {% if user.is_superuser %}
+        <p>Hello, admin.</p>
+    {% else %}
+        <p>Hello, ordinary visitor.</p>
+    {% endif %}
+    <a class="link" href="{% url 'chat_view' %}">Love*Shop</a>
 
   <div class="row">
       {% for product in products %}
@@ -168,19 +175,13 @@
           <h5>{{ product.price }} $</h5>
           <!-- <p class="card-text"> {{product.description }}</p> -->
         </div>
-        {% if request.user.is_authenticated %}
+        
         <p class='text-center'>
           <a href='#' class='add_to_cart' data-slug='{{ product.slug }}'>
             <button class='btn btn-danger' style="border-radius: 1em/1em">Add to bin</button>
           </a>
         </p>
-        {% else %}
-        <p class='text-center'>
-            Please <a class="ti" href='{% url "login" %}'>sign in</a>
-            or
-						<a class="ti" href='{% url "registration" %}'>sign up</a>
-        </p>
-        {% endif %}
+       
     </div>
        {% endfor %}
   </div>
@@ -188,7 +189,7 @@
 
 
   <div class="d_c_h">
-      <a target="_blank" href="https://web.whatsapp.com/send?phone=+380950559784&amp;text=" class="nofocus">
+      <a target="_blank" href="https://web.whatsapp.com/send?phone=+380685913006&amp;text=" class="nofocus">
           <div class="waqfaq" id="style-4" data-ccw="style-4" style="background-color: #15f80080; color: rgba(0, 0, 0, 0.6)">
               <img src="/media/whatsapp-logo-32x32.png" class="" id="s4-icon" data-ccw="style-4" alt="WhatsApp">
               <em>WhatsApp Us</em></div>

@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{%load static%}
+{%block content%}
+
+{% if user.is_superuser %}
+    <p>Hello, admin.</p>
+    <table class="table table-striped dedd" >
+        <thead>
+                <tr>
+    <th scope="col">
+        User
+    </th>
+    <th scope="col">
+        Chat
+    </th>
+    </tr>
+    </thead>
+    {% for chat in chats %}
+    <tr>
+        <td><strong class="comment-title"> Anonim {{ chat.member }} </strong></td>
+        <td></strong> <br> <strong class='comment-same'> {{ chat.get_absolute_url }}</strong></td>
+    </tr>   
+    {% endfor %}
+</table>  
+{% else %}
+<br>
+    
+<table class="table table-striped dedd" >
+        <thead>
+                <tr>
+    <th scope="col">
+        User
+    </th>
+    <th scope="col">
+        Comment
+    </th>
+</tr>
+</thead>
+    {% for message in chat.messages.all %}
+    
+    <tr>
+            <td><strong class="comment-title"> Anonim {{ message.member }} </strong></td>
+                <td></strong> <br> <strong class='comment-same'> {{ message.message }}</strong></td>
+                <td></strong> <br> <strong class='comment-same'> {{ message.pub_date }}</strong></td>
+    </tr>
+    {% endfor %}
+    <div >
+        
+    </div>
+</table>
+
+<form action="" method="GET">
+<div class="input-group mb-3">
+<input id="message" type="text"  name="Ntext" size="20" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
+    <div class="input-group-append">
+        <a href='#' class="send_message" data-slug='{{product.slug}}' 
+        data-id="{{product.id}}"><button class='btn btn-outline-secondary'>send_message</button></a>
+    </div>
+</div>
+</form>
+{% endif %}
+   
+
+<script src='{% static "js/jquery.js" %}'></script>
+<script>
+$(document).ready(function(){
+    $('.send_message').on("click", function(e){
+        e.preventDefault()
+        var message = $('#message').val();    
+        data = {
+            message: message
+        }
+        
+        $.ajax({
+            type: "GET",
+            url: '{% url "send_message" %}',
+            data: data,
+
+            success: function(data){
+                // location.reload();
+                $('.dedd').append('<tr ><td><strong class="comment-title"id="last_mem">'
+                    + data.member+' </strong> </td>'+ 
+                '<td></strong> <br> <strong id="comment-same">'+ data.message + '</strong></td>',+
+                '<td></strong> <br> <strong class="comment-same"> </strong></td></tr>')
+                // console.log(data.member)
+                // alert(data.message);
+
+            }
+            
+        })
+        
+
+    })
+})
+</script>
+
+{%endblock content%}
