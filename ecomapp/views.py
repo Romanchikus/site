@@ -319,43 +319,58 @@ def add_comment(request):
     return JsonResponse({'auth_id': str(user_id),  
         'last_comm': str(comment)})
 
-def chat_view(request):
-    member_id = request.session.session_key
-    print('-------', member_id)
-    try:
+def chat_view(request, chat_id=0):
+    if request.user.is_superuser:
+        print(chat_id)
+        if chat_id == 0:
+            chat_id = request.GET.get("id")
+        chat = Chat.objects.get(id=chat_id)
+        member = Member.objects.get(chat=chat)
+    else:
+        member_id = request.session.session_key
+        print('-------', member_id)
+        try:
+            member = Member.objects.get(member=member_id)
+            chat = Chat.objects.get(member=member)
+        except:
+            member = Member(member=member_id)
+            member.save()
+            chat = Chat(member=member)
+            chat.save()
+    
+    exist_mess = Messages.objects.filter(member= member).exists()
+    context = {'chat':  chat, 'exist_mess': exist_mess}
+    return render(request, "chat_view.html", context)
+
+
+
+
+def send_message(request):
+    if request.user.is_superuser:
+        print('send-------admin')
+        message = request.GET.get("message")
+        chat_id = request.GET.get("id")
+        chat = Chat.objects.get(id=chat_id) 
+        member = chat.member
+        message = chat.send_message(member,message,admin=True)
+        img='/media/108-128.png'
+    else:
+        member_id = request.session.session_key
+        print('-------', member_id)
         member = Member.objects.get(member=member_id)
-    except:
-        member = Member(member=member_id)
-        member.save()
+        chat = Chat.objects.get(member=member) 
+        message = request.GET.get("message")
+        message = chat.send_message(member,message)
+        img = ''
+    return JsonResponse({'member': chat.member.member,  
+            'message': message.message, 'pub_date': message.pub_date ,'admin': message.admin, 'img': img})
+
+def chat_detail(request):
 
     if request.user.is_superuser:
         chats = Chat.objects.all()
 
         context = {'chats':  chats}
-        return render(request, "chat_view.html", context)
+        return render(request, "chat_detail.html", context) 
     else:
-        try:
-            chat = Chat.objects.get(member=member) 
-        except:
-            chat = Chat(member=member)
-            chat.save()
-            # member = Member.objects.get(member=member_id)
-            print('Erorr')
-        
-        mess = Messages.objects.filter(member= member).exists()
-        print(mess)
-        context = {'chat':  chat, 'mess': mess}
-        return render(request, "chat_view.html", context)
-
-def send_message(request):
-    member_id = request.session.session_key
-    print('-------', member_id)
-    member = Member.objects.get(member=member_id)
-    chat = Chat.objects.get(member=member) 
-    message = request.GET.get("message")
-    chat.send_message(member,message)
-    return JsonResponse({'member': str(member_id),  
-        'message': str(message)})
-
-
-
+        return HttpResponseRedirect(reverse('thank_you'))

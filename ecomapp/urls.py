@@ -18,6 +18,7 @@ from ecomapp.views import (base_view,
      add_comment,
      chat_view,
      send_message,
+     chat_detail,
     )
 
 
@@ -39,9 +40,9 @@ urlpatterns = [
     re_path(r'^login/$', login_view, name = 'login'),
     re_path(r'^logout/$', LogoutView.as_view(next_page=reverse_lazy('base')), name='logout'),
     re_path(r'^add_comment/$', add_comment, name = 'add_comment'),
-    re_path(r'^chat_view/$', chat_view, name = 'chat_view'),
+    re_path(r'^chat_view/(?P<chat_id>[-\w]+)/$', chat_view, name = 'chat_view'),
     re_path(r'^send_message/$', send_message, name = 'send_message'),
-    re_path(r'^chat_view/(?P<chat_id>[-\w]+)/$', chat_view, name = 'chat_detail'),
+    re_path(r'^chat_detail', chat_detail, name = 'chat_detail'),
 
     
     # re_path(r'^dialogs/$', login_required(views.DialogsView.as_view()), name='dialogs'),
@@ -50,3 +51,77 @@ urlpatterns = [
     # # re_path(r'^order_make/$', make_order_card, name = 'make_order_card'),
     
 ]   
+# <br>
+    
+# <table class="table table-striped dedd" >
+#         <thead>
+#                 <tr>
+#     <th scope="col">
+#         User
+#     </th>
+#     <th scope="col">
+#         Message
+#     </th>
+# </tr>
+# </thead>
+# {% for mes in chat.messages.all %}
+# <tr>
+#     {{% if not mes.admin %}}
+#     <td><strong class="comment-title"> {{ mes.member }} </strong></td>
+#     <td>  <strong class='comment-same'> {{ mes.message }}</strong></td>
+# </tr> <tr>
+#     <td>  <strong class='comment-same'> {{ mes.pub_date }}</strong></td>
+#     <td></td>
+#     {{% else %}}
+#     <td><strong class="comment-title"> {{ mes.member }} </strong>
+#         <img src="/media/108-128.png" class="" id="s4-icon" data-ccw="style-4" alt="true">
+#     </td>
+#     <td>  <strong class='comment-same'> {{ mes.message }}</strong></td>
+# </tr> <tr>
+#     <td>  <strong class='comment-same'> {{ mes.pub_date }}</strong></td>
+    
+#     {{% endif %}}
+        
+# </tr>   
+# {% endfor %}
+# <div >
+    
+# </div>
+# </table>
+
+
+   
+
+# <script src='{% static "js/jquery.js" %}'></script>
+# <script>
+# $(document).ready(function(){
+#     $('.send_message').on("click", function(e){
+#         e.preventDefault()
+#         var message = $('#message').val();    
+#         data = {
+#             message: message
+#         }
+        
+#         $.ajax({
+#             type: "GET",
+#             url: '{% url "send_message" %}',
+#             data: data,
+
+#             success: function(data){
+#                 // location.reload();
+#                 $('.dedd').append(
+#                     '<tr ><td><strong class="comment-title">'
+#                     + data.member+' </strong> <img src="'
+#                     + data.img+'" class="" id="s4-icon" data-ccw="style-4" alt=""></td><td>  <strong class="comment-same">'
+#                     + data.message+'</strong></td></tr> <tr><td>  <strong class="comment-same">'
+#                     + data.pub_date+' {{ mes.pub_date }}</strong></td></tr>'
+#                 )
+
+#             }
+            
+#         })
+        
+
+#     })
+# })
+# </script>

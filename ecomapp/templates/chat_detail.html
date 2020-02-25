@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{%load static%}
+{%block content%}
+{% if user.is_superuser %}
+    <p>Hello, admin.</p>
+    <table class="table table-striped dedd" >
+        <thead>
+                <tr>
+    <th scope="col">
+        User
+    </th>
+    <th scope="col">
+        Chat
+    </th>
+    </tr>
+    </thead>
+    {% for chat in chats %}
+    <tr>
+        <td><strong class="comment-title"> {{ chat.member }} </strong></td>
+        <td> <br> <strong class='comment-same'> <a href="{{ chat.get_absolute_url }}">{{ chat.get_absolute_url }}</a> </strong></td>
+    </tr>   
+    {% endfor %}
+</table>
+{% endif %}
+
+{%endblock content%}

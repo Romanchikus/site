@@ -2,98 +2,89 @@
 {%load static%}
 {%block content%}
 
-{% if user.is_superuser %}
-    <p>Hello, admin.</p>
-    <table class="table table-striped dedd" >
-        <thead>
-                <tr>
-    <th scope="col">
-        User
-    </th>
-    <th scope="col">
-        Chat
-    </th>
-    </tr>
-    </thead>
-    {% for chat in chats %}
+<table class="table table-striped dedd" >
+    {% if exist_mess %}
+{% for mes in chat.messages.all %}
     <tr>
-        <td><strong class="comment-title"> Anonim {{ chat.member }} </strong></td>
-        <td></strong> <br> <strong class='comment-same'> <a href="{{ chat.get_absolute_url }}">{{ chat.get_absolute_url }}</a> </strong></td>
+        {% if not mes.admin %}
+        <td><strong class="comment-title"> {{ mes.member }} </strong></td>
+        <td>  <strong class='comment-same'> {{ mes.message }}</strong></td>
+    </tr> <tr>
+        <td>  <strong class='comment-same'> {{ mes.pub_date }}</strong></td>
+        <td></td>
+        {% else %}
+        <td><strong class="comment-title"> {{ mes.member }} </strong>
+            <img src="/media/108-128.png" class="" id="s4-icon" data-ccw="style-4" alt="">
+        </td>
+        <td>  <strong class='comment-same'> {{ mes.message }}</strong></td>
+    </tr> <tr>
+        <td>  <strong class='comment-same'> {{ mes.pub_date }}</strong></td>
+        
+        {% endif %}
+        
     </tr>   
     {% endfor %}
+    {% endif %}
 </table>  
-{% else %}
-<br>
-    
-<table class="table table-striped dedd" >
-        <thead>
-                <tr>
-    <th scope="col">
-        User
-    </th>
-    <th scope="col">
-        Message
-    </th>
-</tr>
-</thead>
-{%if mess%}
-    {% for message in chat.messages.all %}
-    
-    <tr>
-        <td><strong class="comment-title"> Anonim {{ message.member }} </strong></td>
-        <td></strong> <br> <strong class='comment-same'> {{ message.message }}</strong></td>
-        <td></strong> <br> <strong class='comment-same'> {{ message.pub_date }}</strong></td>
-    </tr>
-    {% endfor %}
-    {%endif%}
-    <div >
-        
+{% if user.is_superuser %}
+<form action="" method="GET">
+<div class="input-group mb-3">
+<input id="message" type="text"  name="Ntext" size="20" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
+    <div class="input-group-append">
+        <a href='#' class="send_message" data-id="{{chat.id}}">
+            <button class='btn btn-outline-secondary'>send_message</button></a>
     </div>
-</table>
-
+</div>
+</form>
+{% else %}
 <form action="" method="GET">
 <div class="input-group mb-3">
 <input id="message" type="text"  name="Ntext" size="20" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
     <div class="input-group-append">
         <a href='#' class="send_message" data-slug='{{product.slug}}' 
-        data-id="{{product.id}}"><button class='btn btn-outline-secondary'>send_message</button></a>
+        data-id="0"><button class='btn btn-outline-secondary'>send_message</button></a>
     </div>
 </div>
 </form>
-{% endif %}
-   
-
-<script src='{% static "js/jquery.js" %}'></script>
-<script>
-$(document).ready(function(){
-    $('.send_message').on("click", function(e){
-        e.preventDefault()
-        var message = $('#message').val();    
-        data = {
-            message: message
-        }
-        
-        $.ajax({
-            type: "GET",
-            url: '{% url "send_message" %}',
-            data: data,
-
-            success: function(data){
-                // location.reload();
-                $('.dedd').append('<tr ><td><strong class="comment-title"id="last_mem">'
-                    + data.member+' </strong> </td>'+ 
-                '<td></strong> <br> <strong id="comment-same">'+ data.message + '</strong></td>',+
-                '<td></strong> <br> <strong class="comment-same"> </strong></td></tr>')
-                // console.log(data.member)
-                // alert(data.message);
-
+{% endif %}    
+    
+    <script src='{% static "js/jquery.js" %}'></script>
+    <script>
+    $(document).ready(function(){
+        $('.send_message').on("click", function(e){
+            e.preventDefault()
+            var message = $('#message').val();
+            var id = $(this).attr('data-id')
+            data = {
+                message: message,
+                id: id
             }
             
+            $.ajax({
+                type: "GET",
+                url: '{% url "send_message" %}',
+                data: data,
+    
+                success: function(data){
+                    // location.reload();
+                    $('.dedd').append(
+                        '<tr ><td><strong class="comment-title">'
+                        + data.member+' </strong> <img src="'
+                        + data.img+'" class="" id="s4-icon" data-ccw="style-4" alt=""></td><td>  <strong class="comment-same">'
+                        + data.message+'</strong></td></tr> <tr><td>  <strong class="comment-same">'
+                        + data.pub_date+' {{ mes.pub_date }}</strong></td></tr>'
+                    )
+                    // console.log(data.member)
+                    // alert(data.message);
+    
+                }
+                
+            })
+            
+    
         })
-        
-
     })
-})
-</script>
+    </script>
+
 
 {%endblock content%}

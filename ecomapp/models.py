@@ -180,6 +180,8 @@ class Messages(models.Model):
     member = models.CharField(max_length=20, default='')
     message = models.TextField(verbose_name= ("Сообщение"),default='')
     pub_date = models.DateTimeField(verbose_name= ('Дата сообщения'), default=timezone.now)
+    admin = models.BooleanField(default=False)
+    
 
 
 class Chat(models.Model):
@@ -198,18 +200,19 @@ class Chat(models.Model):
         
 
         
-    def send_message(self, member,message):
+    def send_message(self, member,message,admin=False):
         chat = self
-        new_message = Messages.objects.create(message=message,member=member)
+        new_message = Messages.objects.create(message=message,member=member, admin=admin)
         chat.messages.add(new_message)
         chat.save()
         print('save mess')
+        return new_message
         
     def __str__(self):
         return str(self.id)
 
     def get_absolute_url(self):
-        return reverse('chat_detail', kwargs= {'chat_id': str(self.id)})
+        return reverse('chat_view', kwargs= {'chat_id': str(self.id)})
 
 
 
