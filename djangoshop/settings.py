@@ -27,14 +27,15 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
-    '18.216.91.245',
-]
+    '18.216.91.245',]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'ecomapp',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -71,7 +72,7 @@ TEMPLATES = [
         },
     },
 ]
-
+ASGI_APPLICATION = 'djangoshop.routing.application'
 WSGI_APPLICATION = 'djangoshop.wsgi.application'
 
 
@@ -82,6 +83,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # 'TEST': {
+        #     'NAME': os.path.join(BASE_DIR, 'db_test.sqlite3')
+        # }
     }
 }
 
@@ -133,3 +137,11 @@ STATICFILES_DIRS = (
 )
     
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}

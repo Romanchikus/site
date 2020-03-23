@@ -323,7 +323,7 @@ def chat_view(request, chat_id=0):
     if request.user.is_superuser:
         print(chat_id)
         if chat_id == 0:
-            chat_id = request.GET.get("id")
+                chat_id = request.GET.get("id")
         chat = Chat.objects.get(id=chat_id)
         member = Member.objects.get(chat=chat)
     else:
@@ -362,6 +362,7 @@ def send_message(request):
         message = request.GET.get("message")
         message = chat.send_message(member,message)
         img = ''
+    
     return JsonResponse({'member': chat.member.member,  
             'message': message.message, 'pub_date': message.pub_date ,'admin': message.admin, 'img': img})
 
@@ -374,3 +375,11 @@ def chat_detail(request):
         return render(request, "chat_detail.html", context) 
     else:
         return HttpResponseRedirect(reverse('thank_you'))
+
+def index(request):
+    return render(request, 'chat.html', {})
+
+def room(request, room_name):
+    return render(request, 'room.html', {
+        'room_name': room_name
+    })

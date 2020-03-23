@@ -2,24 +2,7 @@ from django.urls import path, re_path
 from django.views.generic import TemplateView
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LogoutView
-from ecomapp.views import (base_view,
-    category_view,
-    product_view,
-    cart_view,
-    add_to_cart_view,
-    remove_from_cart,
-    change_item_qty,
-    checkout_view,
-    order_create_view,
-     make_order_view,
-     account_view,
-     registration_view,
-     login_view,
-     add_comment,
-     chat_view,
-     send_message,
-     chat_detail,
-    )
+from ecomapp.views import *
 
 
 
@@ -43,85 +26,7 @@ urlpatterns = [
     re_path(r'^chat_view/(?P<chat_id>[-\w]+)/$', chat_view, name = 'chat_view'),
     re_path(r'^send_message/$', send_message, name = 'send_message'),
     re_path(r'^chat_detail', chat_detail, name = 'chat_detail'),
-
-    
-    # re_path(r'^dialogs/$', login_required(views.DialogsView.as_view()), name='dialogs'),
-    # re_path(r'^dialogs/create/(?P<user_id>\d+)/$', login_required(views.CreateDialogView.as_view()), name='create_dialog'),
-    # re_path(r'^dialogs/(?P<chat_id>\d+)/$', login_required(views.MessagesView.as_view()), name='messages'),
-    # # re_path(r'^order_make/$', make_order_card, name = 'make_order_card'),
+    path('chat/', index, name='index'),
+    path('chat/<str:room_name>/', room, name='room'),
     
 ]   
-# <br>
-    
-# <table class="table table-striped dedd" >
-#         <thead>
-#                 <tr>
-#     <th scope="col">
-#         User
-#     </th>
-#     <th scope="col">
-#         Message
-#     </th>
-# </tr>
-# </thead>
-# {% for mes in chat.messages.all %}
-# <tr>
-#     {{% if not mes.admin %}}
-#     <td><strong class="comment-title"> {{ mes.member }} </strong></td>
-#     <td>  <strong class='comment-same'> {{ mes.message }}</strong></td>
-# </tr> <tr>
-#     <td>  <strong class='comment-same'> {{ mes.pub_date }}</strong></td>
-#     <td></td>
-#     {{% else %}}
-#     <td><strong class="comment-title"> {{ mes.member }} </strong>
-#         <img src="/media/108-128.png" class="" id="s4-icon" data-ccw="style-4" alt="true">
-#     </td>
-#     <td>  <strong class='comment-same'> {{ mes.message }}</strong></td>
-# </tr> <tr>
-#     <td>  <strong class='comment-same'> {{ mes.pub_date }}</strong></td>
-    
-#     {{% endif %}}
-        
-# </tr>   
-# {% endfor %}
-# <div >
-    
-# </div>
-# </table>
-
-
-   
-
-# <script src='{% static "js/jquery.js" %}'></script>
-# <script>
-# $(document).ready(function(){
-#     $('.send_message').on("click", function(e){
-#         e.preventDefault()
-#         var message = $('#message').val();    
-#         data = {
-#             message: message
-#         }
-        
-#         $.ajax({
-#             type: "GET",
-#             url: '{% url "send_message" %}',
-#             data: data,
-
-#             success: function(data){
-#                 // location.reload();
-#                 $('.dedd').append(
-#                     '<tr ><td><strong class="comment-title">'
-#                     + data.member+' </strong> <img src="'
-#                     + data.img+'" class="" id="s4-icon" data-ccw="style-4" alt=""></td><td>  <strong class="comment-same">'
-#                     + data.message+'</strong></td></tr> <tr><td>  <strong class="comment-same">'
-#                     + data.pub_date+' {{ mes.pub_date }}</strong></td></tr>'
-#                 )
-
-#             }
-            
-#         })
-        
-
-#     })
-# })
-# </script>

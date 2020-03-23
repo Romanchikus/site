@@ -152,10 +152,11 @@
     <!-- /.row -->
     {% if user.is_superuser %}
         <a class="link" href="{% url 'chat_detail'  %}">Admin Chats</a>
-    {% else %}
+    {% elif chat_id%}
     <a class="link" href="{% url 'chat_view' chat_id=chat_id %}">Support chating</a>
+    {% else %}
+    <a class="link" href="{% url 'chat_view' chat_id=0 %}">Support chating</a>
     {% endif %}
-    
 
   <div class="row">
       {% for product in products %}
