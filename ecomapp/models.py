@@ -181,6 +181,7 @@ class Messages(models.Model):
     message = models.TextField(verbose_name= ("Сообщение"),default='')
     pub_date = models.DateTimeField(verbose_name= ('Дата сообщения'), default=timezone.now)
     admin = models.BooleanField(default=False)
+
     
 
 

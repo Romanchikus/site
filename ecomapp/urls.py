@@ -23,10 +23,12 @@ urlpatterns = [
     re_path(r'^login/$', login_view, name = 'login'),
     re_path(r'^logout/$', LogoutView.as_view(next_page=reverse_lazy('base')), name='logout'),
     re_path(r'^add_comment/$', add_comment, name = 'add_comment'),
-    re_path(r'^chat_view/(?P<chat_id>[-\w]+)/$', chat_view, name = 'chat_view'),
+    re_path(r'^chat_view/(?P<chat_id>[-\w]+)/$', changed_room, name = 'chat_view'),
     re_path(r'^send_message/$', send_message, name = 'send_message'),
     re_path(r'^chat_detail', chat_detail, name = 'chat_detail'),
     path('chat/', index, name='index'),
     path('chat/<str:room_name>/', room, name='room'),
+    path('changed_index/', changed_index, name='changed_index'),
+    path('changed_index/<str:room_name>/', changed_room, name='changed_room'),
     
 ]   
