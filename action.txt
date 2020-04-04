@@ -1,0 +1,7 @@
+ssh -i "roma_key.pem" ubuntu@ec2-18-216-91-245.us-east-2.compute.amazonaws.com
+cd djaro
+root@ip-172-31-16-234:/home/ubuntu/djaro# source djaro/bin/activate
+ 
+pip freeze > requirements.txt
+
+

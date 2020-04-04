@@ -25,10 +25,13 @@ SECRET_KEY = '&19o5b01%wtaix3ny^us-h6i3ym072&y_uibl75i*8&tj$dxga'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+host = "18.216.91.245"
+# print('============',host)
 ALLOWED_HOSTS = [
-    "127.0.0.1",
-    '18.216.91.245',]
-
+    '127.0.0.1',
+    host,
+    ]
+os.environ['adress'] = host
 
 # Application definition
 

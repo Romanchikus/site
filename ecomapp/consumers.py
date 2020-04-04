@@ -3,6 +3,9 @@ import json
 from asgiref.sync import async_to_sync
 from ecomapp.models import Chat, Member
 from ecomapp.views import get_last_10_messages
+import urllib.request
+import os
+
 
 class ChatConsumer(WebsocketConsumer):
 
@@ -39,6 +42,13 @@ class ChatConsumer(WebsocketConsumer):
             'command': 'new_message',
             'message': self.message_to_json(message)
         }
+
+        token = '875809845:AAHxB49VM_TowQhXtaBz80fx07XrIvgcHIc'
+        tl_chat_id = 406434091
+        forma = urllib.parse.quote("http://{}/chat_view/{}/".format(os.environ['adress'],str(chat.id)))
+        urllib.request.urlopen(
+            'https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}'.format(token, tl_chat_id, forma))
+        
         return self.send_chat_message(content)
 
     def messages_to_json(self, messages):
@@ -48,12 +58,13 @@ class ChatConsumer(WebsocketConsumer):
         return result
 
     def message_to_json(self, message):
-        return {
+            return {
             'member': str(message.member),  
             'message': str(message.message),
             'pub_date': str(message.pub_date.strftime(" %B %d,%Y, %A %I:%M%p ")),
             'admin': message.admin
             }
+
 
 
     commands = {
