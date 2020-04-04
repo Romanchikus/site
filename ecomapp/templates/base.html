@@ -4,243 +4,412 @@
 
 <head>
 
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="">
-  <meta name="author" content="">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-  <title>Love*Shop </title>
+    <title>Love*Shop </title>
 
-  <!-- Bootstrap core CSS -->
-  <link href='{% static "css/r1.css" %}' rel="stylesheet">
-  <link href='{% static "css/bootstrap.min.css" %}' rel="stylesheet">
+    <!-- Bootstrap core CSS -->
+    <link href='{% static "css/r1.css" %}' rel="stylesheet">
+    <link href='{% static "css/bootstrap.min.css" %}' rel="stylesheet">
 
 
 
 </head>
 
 <body>
+    <div class="bg"></div>
+    <div class="bg bg2"></div>
+    <div class="bg bg3"></div>
 
-  <!-- Navigation -->
-  <div class="bg"></div>
-  <div class="bg bg2"></div>
-  <div class="bg bg3"></div>
-  <!-- <div class="content"></div> -->
-  
 
-  <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e4949493;">
-    <div class="container">
-      <a class="navbar-brand" href="{% url 'base' %}">Love*Shop</a>
-      <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #1382b6c5;">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'base' %}">Love*Shop</a>
+            <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span> -->
-      </button>
-      {% if not request.get_full_path == '/' %}
-        <div class="dropdown">
-            <button id="dLabel" type="button" class="btn btn-danger" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Category
-                <!-- <span class="caret"></span> -->
-            </button> 
-              <ul class="dropdown-menu" aria-labelledby="dLabel">
-              {% for category in categories%}
-              <li><a class="dropdown-item btn-primary" href='{{category.get_absolute_url }}'><strong>{{category.name}}</strong></a></li>
-              {% endfor %}
-              </ul>
-        </div>
+            <!-- </button> -->
+            {% if not request.get_full_path == '/' %}
+            <div class="dropdown">
+                <button id="dLabel" type="button" class="btn btn-danger" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Category
+          <!-- <span class="caret"></span> -->
+        </button>
+                <ul class="dropdown-menu" aria-labelledby="dLabel">
+                    {% for category in categories%}
+                    <li><a class="dropdown-item btn-primary" href='{{category.get_absolute_url }}'><strong>{{category.name}}</strong></a></li>
+                    {% endfor %}
+                </ul>
+            </div>
 
-          {% endif %}
-      
-      
-      {% if not request.user.is_authenticated %}
-					<li>
-					Hi user!
-          </li>
-          <li>
-						<a class="ti" href='{% url "login" %}'>Log in</a>
-					</li>
-					<li>
-						<a class="ti" href='{% url "registration" %}'>Registration</a>
-					</li>
+            {% endif %} {% if not request.user.is_authenticated %}
+            <li>
+                Hi user!
+            </li>
+            <li>
+                <a class="ti" href='{% url "login" %}'>Log in</a>
+            </li>
+            <li>
+                <a class="ti" href='{% url "registration" %}'>Registration</a>
+            </li>
 
-                    {% else %}
-					
-          <li>
-            <a class="ti" href="{% url 'account' %}">Cabinet {{ request.user }}</a>
-          </li>
-          <li>
-              <a class="ti" href="{% url 'logout' %}">Logout</a>
+            {% else %}
+
+            <li>
+                <a class="ti" href="{% url 'account' %}">Cabinet {{ request.user }}</a>
+            </li>
+            <li>
+                <a class="ti" href="{% url 'logout' %}">Logout</a>
             </li>
             {% endif %}
-          <div class="navbar-nav ml-auto">
-          
-          <li>
-            <a class="nav-link" href= "{% url 'cart' %}">Cart <span class="badge badge-success" id="cart_count">{{ cart.item.count }}</span></a>
-          </li>
+            <div class="navbar-nav ml-auto">
+
+                <li>
+                    <a class="nav-link" href="{% url 'cart' %}">Cart <span class="badge badge-success"
+              id="cart_count">{{ cart.item.count }}</span></a>
+                </li>
+            </div>
+
+
+            <div class="" id="navbarResponsive">
+
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+
+                    </li>
+                </ul>
+            </div>
         </div>
-        
-
-      <div class="" id="navbarResponsive">
-        
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-  <div class="container">
-  <!-- Page Content -->
-  {%block content%}
+    </nav>
+    <div class="container">
+        <!-- Page Content -->
+        {%block content%}
 
 
-    <div class="row">
+        <div class="row">
 
-      <div class="col-lg-3">
-<br><br><br>
-        <!-- <h3 class="my-4">я Name</h3> -->
-        <div class="list-group">
-            {% for category in categories%}
-          <a href="{{ category.get_absolute_url }}" class="list-group-item list-group-item-action list-group-item-danger" style=" text-align:center;  "><strong>{{category.name}}</strong></a>
-          {% endfor %}
+            <div class="col-lg-3">
+                <br><br><br>
+                <!-- <h3 class="my-4">я Name</h3> -->
+                <div class="list-group">
+                    {% for category in categories%}
+                    <a href="{{ category.get_absolute_url }}" class="list-group-item list-group-item-action list-group-item-danger" style=" text-align:center;  "><strong>{{category.name}}</strong></a> {% endfor %}
+                </div>
+
+            </div>
+            <!-- /.col-lg-3 -->
+
+            <div class="col-lg-9">
+
+                <div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
+
+                    <div class="carousel-inner" role="listbox" style=" height: 300px; background-color: white ">
+                        {% for product in products %} {% if forloop.first %}
+                        <div class="carousel-item active ">
+                            <img class="center-block" src={{product.image.url}} alt="" style="border-radius: 2em/2em">
+                            <br>
+                            <p class="text-center"><a href="{{ product.get_absolute_url}}"><button class="btn btn-primary"
+                    style="border-radius: 1em/1em">{{ product.title }}</button></a></p>
+                        </div>
+                        {%else%}
+                        <div class="carousel-item ">
+                            <img class="center-block" src={{product.image.url}} alt="" style="border-radius: 2em/2em">
+                            <br>
+                            <p class="text-center"><a href="{{ product.get_absolute_url}}"><button class="btn btn-primary"
+                    style="border-radius: 1em/1em">{{ product.title }}</button></a></p>
+                        </div>
+                        {% endif %} {% endfor %}
+
+                    </div>
+                    <a class="carousel-control-prev radius" href="#carouselExampleIndicators" role="button" data-slide="prev" style="background: #6b5c5c;">
+                        <span class="carousel-control-prev-icon" style="color: rgb(236, 19, 19);" aria-hidden="true"></span>
+                        <span class="sr-only" style="color: black;">Previous</span>
+                    </a>
+                    <a class="carousel-control-next radius" href="#carouselExampleIndicators" role="button" data-slide="next" style="background:  #6b5c5c  ;">
+                        <span class="carousel-control-next-icon" aria-hidden="true" style="color: black;"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+
+
+
+            </div>
+
+            <!-- /.col-lg-9 -->
+
         </div>
+        <!-- /.row -->
 
-      </div>
-      <!-- /.col-lg-3 -->
-      
-      <div class="col-lg-9">
+        <!-- /.row -->
+        {% if user.is_superuser %}
+        <a class="link" href="{% url 'chat_detail'  %}">Admin Chats</a> {% elif chat_id%}
+        <a class="link" href="{% url 'chat_view' chat_id=chat_id %}">Support chating</a> {% else %}
+        <a class="link" href="{% url 'chat_view' chat_id=0 %}">Support chating</a> {% endif %}
 
-        <div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
-          
-          <div class="carousel-inner" role="listbox" style=" height: 300px; background-color: white ">
+        <div class="row">
             {% for product in products %}
-              {% if forloop.first  %}
-              <div class="carousel-item active "   >
-                <img class="center-block" src={{product.image.url}} alt="" style="border-radius: 2em/2em">
-                <br>
-                <p class="text-center"><a href="{{ product.get_absolute_url}}"><button class="btn btn-primary" style="border-radius: 1em/1em">{{ product.title }}</button></a></p>
-              </div>
-              {%else%} 
-              <div class="carousel-item " >
-                <img class="center-block" src={{product.image.url}} alt=""  style="border-radius: 2em/2em">
-                <br>  
-                <p class="text-center"><a href="{{ product.get_absolute_url}}"><button class="btn btn-primary"  style="border-radius: 1em/1em">{{ product.title }}</button></a></p>
-              </div>
-              {% endif %}
-              
-            {% endfor %} 
-            
-          </div>  
-          <a class="carousel-control-prev radius" href="#carouselExampleIndicators" role="button" data-slide="prev" style="background: #6b5c5c;">
-            <span class="carousel-control-prev-icon" style="color: rgb(236, 19, 19);" aria-hidden="true"    ></span>
-            <span class="sr-only" style="color: black;">Previous</span>
-          </a>
-          <a class="carousel-control-next radius" href="#carouselExampleIndicators" role="button" data-slide="next"style="background:  #6b5c5c  ;">
-            <span class="carousel-control-next-icon" aria-hidden="true" style="color: black;"></span>
-            <span class="sr-only">Next</span>
-          </a>
-        </div>
-        
-        
-
-      </div>
-     
-      <!-- /.col-lg-9 -->
-
-    </div>
-    <!-- /.row -->
-    
-    <!-- /.row -->
-    {% if user.is_superuser %}
-        <a class="link" href="{% url 'chat_detail'  %}">Admin Chats</a>
-    {% elif chat_id%}
-    <a class="link" href="{% url 'chat_view' chat_id=chat_id %}">Support chating</a>
-    {% else %}
-    <a class="link" href="{% url 'chat_view' chat_id=0 %}">Support chating</a>
-    {% endif %}
-
-  <div class="row">
-      {% for product in products %}
-    <div class="col" >
-      <div class="text-center ">
-        <a   href="{{ product.get_absolute_url }} ">
-            <img class="img-responsive" style="width: auto;
+            <div class="col">
+                <div class="text-center ">
+                    <a href="{{ product.get_absolute_url }} ">
+                        <img class="img-responsive" style="width: auto;
             height: 215px;max-height: 215px;border-radius: 2em/2em;  " src="{{ product.image.url }}">
-        </a>
+                    </a>
 
-      </div>
-        
-        <div class="text-center">
-          <h4 class="card-title" style="text-decoration: none">
-            <a href="{{ product.get_absolute_url }}"  >{{product.title}}</a>
-          </h4>
-          <h5>{{ product.price }} $</h5>
-          <!-- <p class="card-text"> {{product.description }}</p> -->
+                </div>
+
+                <div class="text-center">
+                    <h4 class="card-title" style="text-decoration: none">
+                        <a href="{{ product.get_absolute_url }}">{{product.title}}</a>
+                    </h4>
+                    <h5>{{ product.price }} $</h5>
+                    <!-- <p class="card-text"> {{product.description }}</p> -->
+                </div>
+
+                <p class='text-center'>
+                    <a href='#' class='add_to_cart' data-slug='{{ product.slug }}'>
+                        <button class='btn btn-danger' style="border-radius: 1em/1em">Add to bin</button>
+                    </a>
+                </p>
+
+            </div>
+            {% endfor %}
         </div>
-        
-        <p class='text-center'>
-          <a href='#' class='add_to_cart' data-slug='{{ product.slug }}'>
-            <button class='btn btn-danger' style="border-radius: 1em/1em">Add to bin</button>
-          </a>
-        </p>
-       
+
+        <div class="d_c_h1">
+            <div class="panel panel-default">
+                <div class="col-md-8 offset-md-3">
+                    <a href="" class="icon_minim">
+                        <button type="button" class="btn btn-primary glyphicon-chevron-down  panel-collapsed" data-toggle="dropdown">
+                           Chat Q/A
+                        </button>
+                    </a>
+
+
+                </div>
+                <div class="panel-body msg_container_base">
+
+                    <div class="container-fluid h-100">
+                        <div class="row justify-content-center h-100">
+                            <div class="col-12 chat">
+
+                                <div class="card">
+                                    <div class="card-header msg_head">
+                                        <div class="d-flex bd-highlight">
+                                            <div class="img_cont">
+                                                <img src="https://clipartart.com/images/admin-icon-clipart-5.jpg" class="rounded-circle user_img">
+                                                <span class="online_icon"></span>
+                                            </div>
+                                            <div class="user_info">
+                                                <span>Chat with Admin</span>
+                                                <!-- <p>1767 Messages</p> -->
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="card-body msg_card_body " id="dedd">
+                                        {% if exist_mess %} {% for mes in chat %} {% if mes.admin %}
+                                        <div class="d-flex justify-content-start mb-4">
+                                            <div class="img_cont_msg">
+                                                <img src="https://clipartart.com/images/admin-icon-clipart-5.jpg" class="rounded-circle user_img_msg">
+                                            </div>
+                                            <div class="msg_cotainer">
+                                                <p>{{ mes.message}}</p> <br>
+                                                <span class="msg_time_send">{{mes.pub_date}}</span>
+                                            </div>
+                                        </div>
+
+                                        {% else %}
+                                        <div class="d-flex justify-content-end mb-4">
+                                            <div class="msg_cotainer_send">
+                                                {{ mes.message}}
+                                                <br>
+                                                <span class="msg_time_send"> {{mes.pub_date}}</span>
+                                            </div>
+                                            <div class="img_cont_msg">
+                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTuK63MKLKu2yTG4Wg5TmcLV1n2gfzgQ3b30nrNtji7vfw31W5g" class="rounded-circle user_img_msg">
+                                            </div>
+                                        </div>
+                                        {% endif %} {%endfor%} {% endif %}
+
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="input-group">
+                                            <!-- <div class="input-group-append">
+                              <span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span>
+                          </div> -->
+                                            <textarea name="" id="textsend" class="form-control type_msg" placeholder="Type your message..."></textarea>
+                                            <div class="input-group-append">
+                                                <span class="input-group-text  send_btn" id="Sbtn"><img
+                    src="https://s3.us-east-2.amazonaws.com/upload-icon/uploads/icons/png/18556509761553771441-256.png"
+                    alt="" class="sendbtn"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <audio id="music_id" src="/media/sms-alert-1-daniel_simon.mp3" preload="auto"></audio>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {%endblock content%}
+        <div class="d_c_h">
+            <a target="_blank" href="https://web.whatsapp.com/send?phone=+380685913006&amp;text=" class="nofocus">
+                <div class="waqfaq" id="style-4" data-ccw="style-4" style="background-color: #15f80080; color: rgba(0, 0, 0, 0.6)">
+                    <img src="/media/whatsapp-logo-32x32.png" class="" id="s4-icon" data-ccw="style-4" alt="WhatsApp">
+                    <em>WhatsApp Us</em></div>
+            </a>
+        </div>
+
     </div>
-       {% endfor %}
-  </div>
-  {%endblock content%}
+    <div id='footer' class="py-3 bg-dark">
 
-
-  <div class="d_c_h">
-      <a target="_blank" href="https://web.whatsapp.com/send?phone=+380685913006&amp;text=" class="nofocus">
-          <div class="waqfaq" id="style-4" data-ccw="style-4" style="background-color: #15f80080; color: rgba(0, 0, 0, 0.6)">
-              <img src="/media/whatsapp-logo-32x32.png" class="" id="s4-icon" data-ccw="style-4" alt="WhatsApp">
-              <em>WhatsApp Us</em></div>
-      </a>
-    </div> 
-</div> 
-
-
-  <div id='footer' class="py-3 bg-dark">
- 
-      <p class="m-0 text-center text-white">Copyright &copy; Your Website 2020</p>
+        <p class="m-0 text-center text-white">Copyright &copy; Your Website 2020</p>
 
     </div>
 
 
-  <!-- Bootstrap core JavaScript -->
+    <!-- Bootstrap core JavaScript -->
 
-  <script src='{% static "js/jquery.js" %}'></script>
-  <script>
-  $(document).ready(function(){
-      $('.add_to_cart').on("click", function(e){
-          e.preventDefault()
-          product_slug = $(this).attr('data-slug')
-          data = {
-              product_slug: product_slug
-          }
-          $.ajax({
-              type: "GET",
-              url: '{% url "add_to_cart" %}',
-              data: data,
-              success: function(data){
-                  $('#cart_count').html(data.cart_total)
-              }
-          })
-      })
-  })
-  $(function(){
-   $(".c_h").click(function(e) {
-            if ($(".chat_container").is(":visible")) {
-                $(".c_h .right_c .mini").text("+")
-            } else {
-                $(".c_h .right_c .mini").text("-")
-            }
-            $(".chat_container").slideToggle("slow");
-            return false
+    <script src='{% static "js/jquery.js" %}'></script>
+    <script>
+        var first = true
+        window.onload = function() {
+            $('.panel-body').slideUp();
+        }
+
+
+        $(document).ready(function() {
+
+            $('.glyphicon-chevron-down').on("click", function(e) {
+                var $this = $(this);
+                if (!$this.hasClass('panel-collapsed')) {
+                    $this.parents('.panel').find('.panel-body').slideUp();
+                    $this.addClass('panel-collapsed');
+                    if (first === true) {
+
+                        first = false
+                    }
+                } else {
+                    $this.parents('.panel').find('.panel-body').slideDown();
+                    $this.removeClass('panel-collapsed');
+                }
+            })
+        })
+
+        $(document).ready(function() {
+            $('.add_to_cart').on("click", function(e) {
+                e.preventDefault()
+                product_slug = $(this).attr('data-slug')
+                data = {
+                    product_slug: product_slug
+                }
+                $.ajax({
+                    type: "GET",
+                    url: '{% url "add_to_cart" %}',
+                    data: data,
+                    success: function(data) {
+                        $('#cart_count').html(data.cart_total)
+                    }
+                })
+            })
+        })
+        $(function() {
+            $(".c_h").click(function(e) {
+                if ($(".chat_container").is(":visible")) {
+                    $(".c_h .right_c .mini").text("+")
+                } else {
+                    $(".c_h .right_c .mini").text("-")
+                }
+                $(".chat_container").slideToggle("slow");
+                return false
+            });
         });
-});
-  </script>
+    </script>
+    <script>
+        var roomName = "{{ room_name|escapejs }}";
+        var chatSocket = new WebSocket(
+            'ws://' + window.location.host +
+            '/ws/chat_view/' + roomName + '/');
+        const messages = document.getElementById('dedd');
+        chatSocket.onmessage = function(e) {
+            var data = JSON.parse(e.data);
+            var data = data['message'];
+            document.getElementById('music_id').play()
+            if (data['admin']) {
+                $('#dedd').append(
+                    '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg">' +
+                    '<img src="https://clipartart.com/images/admin-icon-clipart-5.jpg"' +
+                    'class="rounded-circle user_img_msg"></div><div class="msg_cotainer">' +
+                    data.message + '<br><span class="msg_time_send">' +
+                    data.pub_date + '</span></div></div >'
+                );
+            } else {
+                $('#dedd').append(
+                    '<div class="d-flex justify-content-end mb-4"><div class="msg_cotainer_send">' +
+                    data.message + '<br><span class="msg_time_send">' +
+                    data.pub_date + '</span></div><div class="img_cont_msg">' +
+                    '<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTuK63MKLKu2yTG4Wg5TmcLV1n2gfzgQ3b30nrNtji7vfw31W5g"' +
+                    'class="rounded-circle user_img_msg"></div></div>'
+                );
+            }
 
- <script src='{% static "js/bootstrap.js" %}'></script> 
+            shouldScroll = messages.scrollTop + messages.clientHeight === messages.scrollHeight;
+            /*
+             * Get your messages, we'll just simulate it by appending a new one syncronously.
+             */
+            // After getting your messages.
+            if (!shouldScroll) {
+                scrollToBottom(messages);
+            }
+        }
+
+        function scrollToBottom(messages) {
+            messages.scrollTop = messages.scrollHeight;
+        }
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+        chatSocket.onopen = function() {
+            shouldScroll = messages.scrollTop + messages.clientHeight === messages.scrollHeight;
+            /*
+             * Get your messages, we'll just simulate it by appending a new one syncronously.
+             */
+            // After getting your messages.
+            if (!shouldScroll) {
+                scrollToBottom(messages);
+            }
+        };
+
+        document.querySelector('#textsend').focus();
+        document.querySelector('#textsend').onkeyup = function(e) {
+            if (e.keyCode === 13) { // enter, return
+                document.querySelector('#Sbtn').click();
+            }
+        };
+
+        document.querySelector('#Sbtn').onclick = function(e) {
+            var messageInputDom = document.querySelector('#textsend');
+            var message = messageInputDom.value;
+
+            // var requestmessage = "{{ request }}";
+            chatSocket.send(JSON.stringify({
+                'message': message,
+                'command': 'new_message',
+                'chat_id': roomName
+                    // 'request': requestmessage,
+            }));
+
+            messageInputDom.value = '';
+        };
+    </script>
+
+    <script src='{% static "js/bootstrap.js" %}'></script>
 
 </body>
 

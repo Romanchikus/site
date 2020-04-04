@@ -169,10 +169,6 @@ class Member(models.Model):
     objects = models.Manager()
     member = models.CharField(max_length=20, unique=True)
     admin = models.BooleanField(default=False)
-    # def add_member(self, member):
-    #     member, _ = Member.objects.get_or_create(member=member)
-    #     member.save
-    #     return member
     
 
 class Messages(models.Model):
@@ -189,16 +185,6 @@ class Chat(models.Model):
     id = models.AutoField(primary_key=True)
     messages = models.ManyToManyField(Messages)
     member = models.ForeignKey(Member, on_delete=models.PROTECT, default="")
-
-    # def view_chat(self,member):
-    #     chat = self
-    #     new_item, _ = Member.objects.get_or_create(member=member)
-    #     chat.member.add(new_item)
-    #     chat.save()
-    #     print('add user))')
-    #     chat = chat.obj
-    #     return 
-        
 
         
     def send_message(self, member,message,admin=False):

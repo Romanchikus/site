@@ -30,23 +30,42 @@ def base_view(request):
         cart = Cart.objects.get(id=cart_id)
     categories = Category.objects.all()
     products = Product.objects.all()
-    # member_id = request.session.session_key
-    # print('--member_id-----', member_id)
-    # try:
-    #     member = Member.objects.get(member=member_id)
-    #     chat = Chat.objects.get(member=member)
-    # except:
-    #     member = Member(member=member_id)
-    #     member.save()
-    #     chat = Chat(member=member)
-    #     chat.save()
-    # chat_id = chat.id
-    # print('chat_id =', chat_id)
+
+    if not request.session.session_key:
+        request.session.save()
+    member_id = request.session.session_key
+    print('--member_id-----', member_id)
+    try:
+        member = Member.objects.get(member=member_id)
+        chat = Chat.objects.get(member=member)
+    except:
+        member = Member(member=member_id)
+        member.save()
+        chat = Chat(member=member)
+        chat.save()
+    chat_id = chat.id
+    print('chat_id =', chat_id)
+    if request.user.is_superuser:
+        chat = Chat.objects.get(id=chat_id)
+        member = Member.objects.get(chat=chat)
+    else:
+        try:
+            chat = Chat.objects.get(member=member)
+        except:
+            chat = Chat(member=member)
+            chat.save()
+    chat_id = chat.id
+    print('chat_id =', chat_id)
+    exist_mess = Messages.objects.filter(member=member).exists()
+
     contex = {
         'categories': categories,
         'products': products,
-        'cart': cart
-        }
+        'cart': cart,
+        'chat':  chat.messages.order_by('-pub_date').all()[:10],
+        'room_name': chat_id,
+        'exist_mess': exist_mess
+    }
 
     return render(request, 'base.html', contex)
 
@@ -343,50 +362,6 @@ def add_comment(request):
                          'last_comm': str(comment)})
 
 
-def chat_view(request, chat_id):
-    if request.user.is_superuser:
-        print('admin with chat_id = ', chat_id)
-        chat = Chat.objects.get(id=chat_id)
-        member = Member.objects.get(chat=chat)
-    else:
-        member_id = request.session.session_key
-        print('-------', member_id)
-        try:
-            member = Member.objects.get(member=member_id)
-            chat = Chat.objects.get(member=member)
-        except:
-            member = Member(member=member_id)
-            member.save()
-            chat = Chat(member=member)
-            chat.save()
-
-    exist_mess = Messages.objects.filter(member=member).exists()
-    context = {'chat':  chat, 'exist_mess': exist_mess}
-    return render(request, "chat_view.html", context)
-
-
-def send_message(request):
-    if request.user.is_superuser:
-        print('send-------admin')
-        message = request.GET.get("message")
-        chat_id = request.GET.get("id")
-        chat = Chat.objects.get(id=chat_id)
-        member = chat.member
-        message = chat.send_message(member, message, admin=True)
-        img = '/media/108-128.png'
-    else:
-        member_id = request.session.session_key
-        print('-------', member_id)
-        member = Member.objects.get(member=member_id)
-        chat = Chat.objects.get(member=member)
-        message = request.GET.get("message")
-        message = chat.send_message(member, message)
-        img = ''
-
-    return JsonResponse({'member': chat.member.member,
-                         'message': message.message, 'pub_date': message.pub_date, 'admin': message.admin, 'img': img})
-
-
 def chat_detail(request):
 
     if request.user.is_superuser:
@@ -396,25 +371,6 @@ def chat_detail(request):
         return render(request, "chat_detail.html", context)
     else:
         return HttpResponseRedirect(reverse('thank_you'))
-
-
-def index(request):
-    return render(request, 'chat.html', {})
-
-
-def room(request, room_name):
-    return render(request, 'room.html', {
-        'room_name': room_name
-    })
-
-
-def changed_index(request):
-    return render(request, 'changed_index.html', {})
-
-# def changed_room(request, room_name):
-#     return render(request, 'changed_room.html', {
-#         'room_name': room_name
-#     })
 
 
 def changed_room(request, chat_id):
