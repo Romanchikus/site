@@ -41,6 +41,7 @@ VIRTUAL_ENV="/home/roma/djangoshop/venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
+echo $PATH
 PATH="$VIRTUAL_ENV/bin:$PATH"
 export PATH
 

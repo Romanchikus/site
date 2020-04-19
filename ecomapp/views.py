@@ -6,6 +6,7 @@ from decimal import Decimal
 from ecomapp.forms import OrderForm, RegistrationForm, LoginForm, CommentForm
 from django.contrib.auth import login, authenticate
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
 
 import urllib.request
 token = '875809845:AAHxB49VM_TowQhXtaBz80fx07XrIvgcHIc'
@@ -68,6 +69,24 @@ def base_view(request):
     }
 
     return render(request, 'base.html', contex)
+
+
+def login_view(request):
+   
+    form = LoginForm(request.POST or None)
+    if form.is_valid():
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
+        username = get_object_or_404(User, username=username)
+        login_user = authenticate(username=username, password=password)
+        if login_user:
+            login(request, login_user)
+            return HttpResponseRedirect(reverse('base'))
+    context = {
+        'form': form
+    }
+    return render(request, 'login.html', context) 
+
 
 
 def product_view(request, product_slug):
@@ -330,19 +349,7 @@ def registration_view(request):
     return render(request, 'registration.html', context)
 
 
-def login_view(request):
-    form = LoginForm(request.POST or None)
-    if form.is_valid():
-        username = form.cleaned_data['username']
-        password = form.cleaned_data['password']
-        login_user = authenticate(username=username, password=password)
-        if login_user:
-            login(request, login_user)
-            return HttpResponseRedirect(reverse('base'))
-    context = {
-        'form': form
-    }
-    return render(request, 'login.html', context)
+
 
 
 def add_comment(request):
@@ -390,9 +397,9 @@ def changed_room(request, chat_id):
             chat.save()
     chat_id = chat.id
     print('chat_id =', chat_id)
-
+    messages = messages_to_list(get_last_10_messages(chat_id))
     exist_mess = Messages.objects.filter(member=member).exists()
-    context = {'chat':  chat.messages.order_by('pub_date').all()[10:],
+    context = {'chat':  messages,
                'room_name': chat_id,
                'exist_mess': exist_mess}
     return render(request, 'changed_room.html', context)
@@ -401,3 +408,18 @@ def changed_room(request, chat_id):
 def get_last_10_messages(chatId):
     chat = get_object_or_404(Chat, id=chatId)
     return chat.messages.order_by('-pub_date').all()[:10]
+
+def messages_to_list(messages):
+        result = []
+        for message in messages:
+            result.append(message_to_list(message))
+        result.reverse()
+        return result
+
+def message_to_list(message):
+        return {
+        'member': str(message.member),  
+        'message': str(message.message),
+        'pub_date': str(message.pub_date.strftime(" %B %d,%Y, %A %I:%M%p ")),
+        'admin': message.admin
+        }

@@ -1,41 +1,38 @@
-{% extends "base.html" %}
-{%load static%}
-{% load crispy_forms_tags %}
-{%block content%}
+{% extends "base.html" %} {%load static%} {% load crispy_forms_tags %} {%block content%}
 
-    <!-- <div class="row"> -->
-        <!-- <div class="col-sm-4">
+<!-- <div class="row"> -->
+<!-- <div class="col-sm-4">
             <img src='{{ product.image.url }}'style = 'width:100%; height:100%' >
         </div> -->
-        <!-- The grid: four columns -->
+<!-- The grid: four columns -->
 
 <div class="row">
-        {% if not  images == False %}
+    {% if not images == False %}
     <div class="col-sm-1">
-            
+
 
         {% for image in images %}
-        
+
         <div class="column1">
-            <img src="{{ image.image.url }}" alt="" onclick="myFunction(this);"style="width:80px;">
+            <img src="{{ image.image.url }}" alt="" onclick="myFunction(this);" style="width:80px;">
         </div>
-        
+
         {% endfor %}
-        
+
     </div>
 
     <div class="col-sm-3" style="padding-top: 10px;padding-left: 35px;">
-            
+
         <div class="container1">
             <span onclick="this.parentElement.style.display='none'" class="closebtn">&times;</span>
-                <img id="expandedImg" style="width:100%">
+            <img id="expandedImg" style="width:100%">
             <div id="imgtext"></div>
         </div>
     </div>
     {% else %}
     <div class="col-sm-5">
 
-            <img class="img-responsive" style="width: 100%;
+        <img class="img-responsive" style="width: 100%;
             /* height: 100%; */
             /* max-height: 500px; */
             border-radius: 2em/2em;
@@ -53,58 +50,39 @@
         <p class="text-center"><strong><em>{{ product.description }}</em></strong></p>
         <hr>
         <p>Price: <strong>{{ product.price }} $</strong> </p>
-        
+
         <a href='#' class='add_to_cart' data-slug='{{ product.slug }}'>
             <button class='btn btn-danger'>Add to bin</button>
         </a>
-<<<<<<< HEAD
-=======
-        <table>
-            {% for comment in product.comment.all %}
-            <br>
-            <tr>
-                    <strong>  {{ comment.comments }} -+= {{ comment.author }} </strong>
-            </tr>
-            {% endfor %}
-            <tr class="last_comm">
-                <strong> </strong>
-            </tr>
-        </table>
-        <form action="" method="GET">
-                <input id="example" type="text"  name="Ntext" size="20">
-                <a href='#' class="add_comment" data-slug='{{product.slug}}' 
-                data-id="{{product.id}}"><button class="btn btn-default">Add comment</button></a>
-        </form>
-        
-       
->>>>>>> e46b1544cd5b4da57dd1560d8bde52c97e54440e
+
+
+
     </div>
-    <div class="col-sm-4"   >
+    <div class="col-sm-4">
         <br>
         <form action="" method="GET">
-                <div class="input-group mb-3">
-            <input id="example" type="text"  name="Ntext" size="20" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-            <a href='#' class="add_comment" data-slug='{{product.slug}}' 
-            data-id="{{product.id}}"><button class='btn btn-outline-secondary'>Add comment</button></a>
+            <div class="input-group mb-3">
+                <input id="example" type="text" name="Ntext" size="20" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <a href='#' class="add_comment" data-slug='{{product.slug}}' data-id="{{product.id}}"><button class='btn btn-outline-secondary'>Add comment</button></a>
+                </div>
             </div>
-        </div>
         </form>
         <table class="table table-striped">
-                <thead>
-                        <tr>
-            <th scope="col">
-                User
-            </th>
-            <th scope="col">
-                Comment
-            </th>
-        </tr>
-    </thead>
+            <thead>
+                <tr>
+                    <th scope="col">
+                        User
+                    </th>
+                    <th scope="col">
+                        Comment
+                    </th>
+                </tr>
+            </thead>
             {% for comment in product.comment.all %}
-            
+
             <tr>
-                    <td><strong class="comment-title"> Anonim {{ comment.author }}</td>
+                <td><strong class="comment-title"> Anonim {{ comment.author }}</td>
                         <td></strong> <br> <strong class='comment-same'> {{ comment.comments }}</strong></td>
             </tr>
             {% endfor %}
@@ -112,103 +90,99 @@
                 <strong> </strong>
             </tr>
         </table>
-        
+
     </div>
-        
-        
-       
-   
+
+
+
+
 </div>
 
 
 
-    <!-- </div> -->
+<!-- </div> -->
 
 
 <script src='{% static "js/jquery.js" %}'></script>
 <script>
-$(document).ready(function(){
-    $('.add_to_cart').on("click", function(e){
-        e.preventDefault()
-        product_slug = $(this).attr('data-slug')
-        txt = document.getElementById('example').value
-        data = {
-            product_slug: product_slug
-        }
-        $.ajax({
-            type: "GET",
-            url: '{% url "add_to_cart" %}',
-            data: data,
-            success: function(data){
-                $('#cart_count').html(data.cart_total)
+    $(document).ready(function() {
+        $('.add_to_cart').on("click", function(e) {
+            e.preventDefault()
+            product_slug = $(this).attr('data-slug')
+            txt = document.getElementById('example').value
+            data = {
+                product_slug: product_slug
             }
+            $.ajax({
+                type: "GET",
+                url: '{% url "add_to_cart" %}',
+                data: data,
+                success: function(data) {
+                    $('#cart_count').html(data.cart_total)
+                }
+            })
+        })
+        $('.add_comment').on("click", function(e) {
+            e.preventDefault()
+            var txt = $('#example').val();
+            product_slug = $(this).attr('data-slug')
+            data = {
+                product_slug: product_slug,
+                txt: txt
+            }
+            location.reload();
+
+            $.ajax({
+                type: "GET",
+                url: '{% url "add_comment" %}',
+                data: data,
+                success: function(data) {
+                    $('.dedd').append('<tr ><td><strong class="comment-title"id="last_mem">' +
+                        data.auth_id + ' </strong> </td>' +
+                        '<td></strong> <br> <strong id="comment-same">' + data.last_comm + '</strong></td>', +
+                        '<td></strong> <br> <strong class="comment-same"> </strong></td></tr>')
+                    $('#last_comm').html("<strong>" + data.auth_id + '$  ', data.last_comm + '$ </strong>')
+
+
+                }
+            })
+
         })
     })
-    $('.add_comment').on("click", function(e){
-        e.preventDefault()
-        var txt = $('#example').val();
-        product_slug = $(this).attr('data-slug')    
-        data = {
-            product_slug: product_slug,
-            txt: txt
-        }
-<<<<<<< HEAD
-        // location.reload();
-=======
-        location.reload();
->>>>>>> e46b1544cd5b4da57dd1560d8bde52c97e54440e
-        $.ajax({
-            type: "GET",
-            url: '{% url "add_comment" %}',
-            data: data,
-            success: function(data){
-<<<<<<< HEAD
-                $('.dedd').append('<tr ><td><strong class="comment-title"id="last_mem">'
-                    + data.auth_id+' </strong> </td>'+ 
-                '<td></strong> <br> <strong id="comment-same">'+ data.last_comm + '</strong></td>',+
-                '<td></strong> <br> <strong class="comment-same"> </strong></td></tr>')
-=======
-                $('#last_comm').html("<strong>"+data.auth_id + '$  ' , data.last_comm+ '$ </strong>')
->>>>>>> e46b1544cd5b4da57dd1560d8bde52c97e54440e
 
-            }
-        })
-
-    })
-})
-function myFunction(imgs) {
-  // Get the expanded image
-  var expandImg = document.getElementById("expandedImg");
-  // Get the image text
-  var imgText = document.getElementById("imgtext");
-  // Use the same src in the expanded image as the image being clicked on from the grid
-  expandImg.src = imgs.src;
-  // Use the value of the alt attribute of the clickable image as text inside the expanded image
-  imgText.innerHTML = imgs.alt;
-  // Show the container element (hidden with CSS)
-  expandImg.parentElement.style.display = "block";
-}
+    function myFunction(imgs) {
+        // Get the expanded image
+        var expandImg = document.getElementById("expandedImg");
+        // Get the image text
+        var imgText = document.getElementById("imgtext");
+        // Use the same src in the expanded image as the image being clicked on from the grid
+        expandImg.src = imgs.src;
+        // Use the value of the alt attribute of the clickable image as text inside the expanded image
+        imgText.innerHTML = imgs.alt;
+        // Show the container element (hidden with CSS)
+        expandImg.parentElement.style.display = "block";
+    }
 </script>
 <style>
-.comment-title {
-    display: inline-block;
-    font-size: 1rem;
-    word-wrap: break-word;
-    text-shadow: 1px 1px 0px #fff, 2px 2px 0px rgba(29, 56, 207, 0.637);
-}
-.comment-same{
-    font-size: 0.9rem;
-    background-color: #076b25;
-    -webkit-background-clip: text;
-    -moz-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-shadow: rgba(255,255,255,0.5) 0px 1px 1px;
+    .comment-title {
+        display: inline-block;
+        font-size: 1rem;
+        word-wrap: break-word;
+        text-shadow: 1px 1px 0px #fff, 2px 2px 0px rgba(29, 56, 207, 0.637);
+    }
     
-}
-td{
+    .comment-same {
+        font-size: 0.9rem;
+        background-color: #076b25;
+        -webkit-background-clip: text;
+        -moz-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 1px;
+    }
     
-    text-align: center;
-}
+    td {
+        text-align: center;
+    }
 </style>
 {%endblock content%}

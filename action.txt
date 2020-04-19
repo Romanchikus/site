@@ -1,7 +1,161 @@
 ssh -i "roma_key.pem" ubuntu@ec2-18-216-91-245.us-east-2.compute.amazonaws.com
 cd djaro
-root@ip-172-31-16-234:/home/ubuntu/djaro# source djaro/bin/activate
- 
-pip freeze > requirements.txt
+			
+			sudo passwd root
+			sudo apt install python3.7
+			apt-get install python3-venv
+			python3 -m venv env
+			alias python=python3.7
 
+root@ip-172-31-16-234:/home/ubuntu/djaro# source env/bin/activate
+
+git clone https://github.com/Romanchikus/site.git
+                     				cd - (goes back to previous directory)
+			pip freeze > requirements.txt
+
+			rm -r /home/ubuntu/djaro/*
+		delete migrations
+		screen
+		screen -ls
+git clone https://github.com/Romanchikus/site.git
+pip3 install -r requirements.txt
+			killall screen
+cd site
+
+pip3 install gunicorn
+
+sudo apt-get install -y nginx
+
+		in aws set groups security
+(env) root@ip-172-31-17-121:/home/ubuntu/site# gunicorn  --bind 0.0.0.0:8000 djangoshop.wsgi:application
+daphne -b 0.0.0.0 -p 8001 djangoshop.asgi:channel_layer
+
+sudo apt-get install -y supervisor
+ cd /etc/supervisor/conf.d/
+sudo touch gunicorn.conf
+
+[program:gunicorn]
+directory = /home/ubuntu/site
+command=/home/ubuntu/env/bin/gunicorn --workers 1 --bind unix:/home/ubuntu/site/app.sock djangoshop.wsgi:application
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/gunicorn/gunicorn.err.log
+stderr_logfile=/var/log/gunicorn/gunicorn.out.log
+
+[group:guni]
+programs:gunicorn
+
+ctrl o ctrl x
+
+
+
+
+
+
+
+sudo rm -r /etc/supervisor/conf.d/daphne.conf
+sudo touch /etc/supervisor/conf.d/daphne.conf
+sudo nano /etc/supervisor/conf.d/daphne.conf
+
+
+
+[program:gunicorn]
+directory = /home/ubuntu/site
+command=/home/ubuntu/env/bin/gunicorn --workers 1 --bind unix:/home/ubuntu/site/app.sock djangoshop.wsgi:application
+autostart=true
+autorestart=true
+stopasgroup=true
+
+[program:platform_asgi_workers]
+command=/home/ubuntu/env/bin/python3 /home/ubuntu/site/manage.py runworker
+process_name=asgi_worker%(process_num)s
+numprocs=1
+stdout_logfile=/var/log/worker.log
+
+[program:daphne]
+socket=tcp://localhost:9000
+directory = /home/ubuntu/site
+command=/home/ubuntu/env/bin/daphne -b 0.0.0.0 -p 9001 --access-log - --proxy-headers djangoshop.asgi:application
+numprocs=1
+autostart=true
+autorestart=true
+stopasgroup=true
+stdout_logfile=/var/log/worker.log
+
+sudo supervisorctl reload
+sudo supervisorctl reread
+sudo supervisorctl update
+sudo supervisorctl status
+
+
+
+
+
+cd /etc/nginx/sites-available/
+sudo rm -r django.conf
+sudo touch django.conf
+sudo nano /etc/nginx/sites-available/django.conf
+
+
+upstream app {
+    server unix:/home/ubuntu/site/app.sock;
+}
+
+
+
+server {
+    
+	listen 80;
+	server_name ec2-3-22-194-198.us-east-2.compute.amazonaws.com;
+	client_max_body_size 20M;
+
+	location / {
+		try_files $uri @proxy_to_app;
+}
+	location /ws {
+        	try_files $uri @proxy_to_ws;
+    }
+    
+
+    
+
+    location @proxy_to_ws {
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_redirect off;
+
+        proxy_pass  http://127.0.0.1:9001;
+    }
+
+    location @proxy_to_app {
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Url-Scheme $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_redirect off;
+	proxy_set_header Host $host;
+	proxy_set_header X-Forwarded-Port $server_port;
+        proxy_pass   http://app;
+    }
+	location /static/ {
+		alias /home/ubuntu/site/static_in_dev/;
+    }
+
+}
+
+sudo ln -s /etc/nginx/sites-available/django.conf /etc/nginx/sites-enabled/django.conf
+
+
+
+sudo supervisord
+sudo service supervisor restart
+sudo supervisorctl reload
+sudo supervisorctl reread
+sudo supervisorctl update
+sudo service nginx restart
+sudo supervisorctl status
+sudo nginx -t
+
+
+https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-18-04-ru
 
