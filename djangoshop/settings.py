@@ -26,9 +26,11 @@ SECRET_KEY = '&19o5b01%wtaix3ny^us-h6i3ym072&y_uibl75i*8&tj$dxga'
 DEBUG = True
 
 host = "ec2-3-22-194-198.us-east-2.compute.amazonaws.com"
+
 # print('============',host)
 ALLOWED_HOSTS = [
     host,
+    "localhost",
     ]
 os.environ['adress'] = host
 
@@ -37,7 +39,6 @@ os.environ['adress'] = host
 INSTALLED_APPS = [
     'channels',
     'ecomapp',
-    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

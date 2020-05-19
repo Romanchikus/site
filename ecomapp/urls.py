@@ -7,10 +7,10 @@ from ecomapp.views import *
 
 
 urlpatterns = [
-    path('', base_view, name='base'),
-    re_path(r'^category/(?P<category_slug>[-\w]+)/$', category_view, name = 'category_detail'),
-    re_path(r'^product/(?P<product_slug>[-\w]+)/$', product_view, name = 'product_detail'),
-    re_path(r'^cart/$', cart_view, name = 'cart'),
+    path('', Base.as_view(), name='base'),
+    re_path(r'^category/(?P<category_slug>[-\w]+)/$', CategoryView.as_view(), name = 'category_detail'),
+    re_path(r'^product/(?P<slug>[-\w]+)/$', ProductView.as_view(), name = 'product_detail'),
+    re_path(r'^cart/$', CartView.as_view(), name = 'cart'),
     re_path(r'^add_to_cart/$', add_to_cart_view, name = 'add_to_cart'),
     re_path(r'^remove_from_cart/$', remove_from_cart, name = 'remove_from_cart'),
     re_path(r'^change_item_qty/$', change_item_qty, name = 'change_item_qty'),
@@ -23,6 +23,6 @@ urlpatterns = [
     re_path(r'^login/$', login_view, name = 'login'),
     re_path(r'^logout/$', LogoutView.as_view(next_page=reverse_lazy('base')), name='logout'),
     re_path(r'^add_comment/$', add_comment, name = 'add_comment'),
-    re_path(r'^chat_view/(?P<chat_id>[-\w]+)/$', changed_room, name = 'chat_view'),
+    re_path(r'^chat_view/(?P<chat_id>[-\w]+)/$', Room.as_view(), name = 'chat_view'),
     re_path(r'^chat_detail', chat_detail, name = 'chat_detail'),
 ]   

