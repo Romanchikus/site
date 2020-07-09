@@ -11,6 +11,14 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from email.utils import parseaddr
+
+import environ
+from django.utils.translation import ugettext_lazy as _
+
+env = environ.Env()
+env.read_env(os.path.join(BASE_DIR, ".env"))
+_ENV = env.str("DJANGO_SETTINGS_MODULE", "config.settings.base")
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,10 +28,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '&19o5b01%wtaix3ny^us-h6i3ym072&y_uibl75i*8&tj$dxga'
+SECRET_KEY = env.str("DJANGO_SECRET_KEY", default="!!!SET DJANGO_SECRET_KEY!!!",)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool("DJANGO_DEBUG", True)
 
 host = "ec2-3-22-194-198.us-east-2.compute.amazonaws.com"
 
@@ -83,15 +91,7 @@ WSGI_APPLICATION = 'djangoshop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        # 'TEST': {
-        #     'NAME': os.path.join(BASE_DIR, 'db_test.sqlite3')
-        # }
-    }
-}
+DATABASES = {"default": env.db("DATABASE_URL")}
 
 
 # Password validation
@@ -149,3 +149,9 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+AUTH_USER_MODEL = "profiles.User"
+admins_data = env.tuple(
+    "DJANGO_ADMINS", default="Site <site2020@mail.com>"
+)
+ADMINS = tuple(parseaddr(email) for email in admins_data)
