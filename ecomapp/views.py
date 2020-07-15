@@ -27,10 +27,6 @@ class Base(Cart_and_chat_init ,View):
     def get(self, request):
         return self.get_base(request)
         
-    
-
-    
-
 
 def login_view(request):
    
@@ -48,8 +44,9 @@ def login_view(request):
     }
     return render(request, 'login.html', context) 
 
-class ProductView(Cart_and_chat_init, DetailView):
+class ProductView(Cart_and_chat_init, View):
     template_name = "product.html"
+
     def get(self, request, slug):
         product = get_object_or_404(Product, slug=slug)
         images = product.images.all()
@@ -59,11 +56,10 @@ class ProductView(Cart_and_chat_init, DetailView):
         'images':images,
         'form':CommentForm(request.POST or None)
         }
-        
         return self.get_base(request) 
 
 
-class CategoryView(Cart_and_chat_init, DetailView):
+class CategoryView(Cart_and_chat_init, View):
     template_name = "category.html"
 
     def get(self, request, category_slug):

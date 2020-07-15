@@ -17,11 +17,11 @@ import environ
 from django.utils.translation import ugettext_lazy as _
 
 env = environ.Env()
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 env.read_env(os.path.join(BASE_DIR, ".env"))
-_ENV = env.str("DJANGO_SETTINGS_MODULE", "config.settings.base")
+_ENV = env.str("DJANGO_SETTINGS_MODULE", "djangoshop.settings")
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
@@ -145,12 +145,11 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
+            "hosts": [('redis', 6379)],
         },
     },
 }
 
-AUTH_USER_MODEL = "profiles.User"
 admins_data = env.tuple(
     "DJANGO_ADMINS", default="Site <site2020@mail.com>"
 )

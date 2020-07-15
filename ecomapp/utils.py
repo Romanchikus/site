@@ -28,13 +28,14 @@ class Cart_and_chat_init:
         if not request.session.session_key:
             request.session.save()
         member_id = request.session.session_key
+        member, _ = Member.objects.get_or_create(member=member_id)
+        member.save()
         try:
             if self.chat_id and request.user.is_superuser:
                 chat = Chat.objects.get(id=self.chat_id)
                 member = Member.objects.get(chat=chat)
             else:
-                member = Member.objects.get(member=member_id)
-                chat = Chat.objects.get(member=member)
+                chat, _ = Chat.objects.get_or_create(member=member)
         except:
             member = Member(member=member_id)
             member.save()

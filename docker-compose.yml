@@ -5,14 +5,15 @@ volumes:
   local_postgres_data_backups: {}
 
 services:
-    site_django:
+  site_django:
     build:
       context: .
       dockerfile: ./compose/local/django/Dockerfile
-    image: site_local_django
+    image: site_local_django1
     container_name: site_django
     depends_on:
-      - site_postgres
+      - postgres
+      - redis
     volumes:
       - .:/site
     env_file:
@@ -20,18 +21,25 @@ services:
       - ./.envs/.local/.postgres
     ports:
       - "8008:8008"
+    links:
+      - redis
     command: /start
 
-    site_postgres:
+  postgres:
     build:
       context: .
       dockerfile: ./compose/production/postgres/Dockerfile
     image: site_production_postgres
-    container_name: site_postgres
+    container_name: postgres
     volumes:
       - local_postgres_data:/var/lib/postgresql/data
       - local_postgres_data_backups:/backups
     env_file:
       - ./.envs/.local/.postgres
     ports:
-      - "5430:5430"
+      - "5432:5432"
+  redis:
+    restart: always
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
