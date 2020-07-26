@@ -1,20 +1,22 @@
 {% extends "base.html" %}
 {%load static%}
+{% load functions %}
 {%block content%}
 <div class="col-12">
     <h2 class="text-center"> {{ category.name }} </h2>
     <hr>
     <div class="row align-items-start">
         {% for product in products_of_category %}
-        <div class="col-sm-4">
+        <div class="col">
                 <a   href="{{ product.get_absolute_url }} ">
-                <div class="text-center">
-                    <img class="img-responsive" src='{{ product.image.url }}' style="height: 300px" >
+                <div class="text-center ">
+                    <img class="img-responsive custom_border" src='{{ product.image.url }}' 
+                    style="max-height: 215px; width: auto;" >
                 </div>
                 </a>
                 <div class="text-center">
                         <a   href="{{ product.get_absolute_url }} ">
-                    <h5 class="text-center">{{product.title}}</h5> </a>
+                    <h5 class="text-center">{{product.title|split}}</h5> </a>
                     
                     {% if request.user.is_authenticated %}
                     <p class='text-center'>

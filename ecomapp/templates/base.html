@@ -1,4 +1,5 @@
 {% load static %}
+{% load functions %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -33,13 +34,15 @@
             <!-- </button> -->
             {% if not request.get_full_path == '/' %}
             <div class="dropdown">
-                <button id="dLabel" type="button" class="btn btn-danger" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Category
-          <!-- <span class="caret"></span> -->
-        </button>
+                <button id="dLabel" type="button" class="btn btn-danger" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    Category
+                    <!-- <span class="caret"></span> -->
+                </button>
                 <ul class="dropdown-menu" aria-labelledby="dLabel">
-                    {% for category in categories%}
-                    <li><a class="dropdown-item btn-primary" href='{{category.get_absolute_url }}'><strong>{{category.name}}</strong></a></li>
+                    {% for category in categories %}
+                    <li><a class="dropdown-item btn-primary"
+                            href='{{category.get_absolute_url }}'><strong>{{category.name}}</strong></a></li>
                     {% endfor %}
                 </ul>
             </div>
@@ -68,7 +71,7 @@
 
                 <li>
                     <a class="nav-link" href="{% url 'cart' %}">Cart <span class="badge badge-success"
-              id="cart_count">{{ cart.item.count }}</span></a>
+                            id="cart_count">{{ cart.item.count }}</span></a>
                 </li>
             </div>
 
@@ -95,39 +98,46 @@
                 <!-- <h3 class="my-4">я Name</h3> -->
                 <div class="list-group">
                     {% for category in categories%}
-                    <a href="{{ category.get_absolute_url }}" class="list-group-item list-group-item-action list-group-item-danger" style=" text-align:center;  "><strong>{{category.name}}</strong></a> {% endfor %}
+                    <a href="{{ category.get_absolute_url }}"
+                        class="list-group-item list-group-item-action custom_border"
+                        style=" text-align:center;  "><strong>{{category.name}}</strong></a> {% endfor %}
                 </div>
 
             </div>
             <!-- /.col-lg-3 -->
 
-            <div class="col-lg-9">
+            <div class="col-lg-9" >
 
-                <div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
+                <div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel" >
 
-                    <div class="carousel-inner" role="listbox" style=" height: 300px; background-color: white ">
+                    <div class="carousel-inner " role="listbox" >
                         {% for product in products %} {% if forloop.first %}
-                        <div class="carousel-item active ">
-                            <img class="center-block" src={{product.image.url}} alt="" style="border-radius: 2em/2em">
+                        <div class="carousel-item active car_item">
+                            <img class="center-block" src={{product.image.url}} style="border-radius: 2em/2em">
                             <br>
-                            <p class="text-center"><a href="{{ product.get_absolute_url}}"><button class="btn btn-primary"
-                    style="border-radius: 1em/1em">{{ product.title }}</button></a></p>
+                            <p class="text-center"><a href="{{ product.get_absolute_url}}"><button
+                                        class="btn btn-primary"
+                                        style="border-radius: 1em/1em">{{ product.title|split }}</button></a></p>
                         </div>
                         {%else%}
-                        <div class="carousel-item ">
+                        <div class="carousel-item  car_item">
                             <img class="center-block" src={{product.image.url}} alt="" style="border-radius: 2em/2em">
                             <br>
-                            <p class="text-center"><a href="{{ product.get_absolute_url}}"><button class="btn btn-primary"
-                    style="border-radius: 1em/1em">{{ product.title }}</button></a></p>
+                            <p class="text-center"><a href="{{ product.get_absolute_url}}"><button
+                                        class="btn btn-primary"
+                                        style="border-radius: 1em/1em">{{  product.title|split }}</button></a></p>
                         </div>
                         {% endif %} {% endfor %}
 
                     </div>
-                    <a class="carousel-control-prev radius" href="#carouselExampleIndicators" role="button" data-slide="prev" style="background: #6b5c5c;">
-                        <span class="carousel-control-prev-icon" style="color: rgb(236, 19, 19);" aria-hidden="true"></span>
+                    <a class="carousel-control-prev control_style custom_border" href="#carouselExampleIndicators"
+                        role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" style="color: rgb(236, 19, 19);"
+                            aria-hidden="true"></span>
                         <span class="sr-only" style="color: black;">Previous</span>
                     </a>
-                    <a class="carousel-control-next radius" href="#carouselExampleIndicators" role="button" data-slide="next" style="background:  #6b5c5c  ;">
+                    <a class="carousel-control-next control_style custom_border " href="#carouselExampleIndicators"
+                        role="button" data-slide="next">
                         <span class="carousel-control-next-icon" aria-hidden="true" style="color: black;"></span>
                         <span class="sr-only">Next</span>
                     </a>
@@ -153,15 +163,15 @@
             <div class="col">
                 <div class="text-center ">
                     <a href="{{ product.get_absolute_url }} ">
-                        <img class="img-responsive" style="width: auto;
-            height: 215px;max-height: 215px;border-radius: 2em/2em;  " src="{{ product.image.url }}">
+                        <img class="img-responsive custom_border" style="width: auto;
+                        max-height: 215px;  " src="{{ product.image.url }}">
                     </a>
 
                 </div>
 
                 <div class="text-center">
                     <h4 class="card-title" style="text-decoration: none">
-                        <a href="{{ product.get_absolute_url }}">{{product.title}}</a>
+                        <a href="{{ product.get_absolute_url }}">{{product.title|split}}</a>
                     </h4>
                     <h5>{{ product.price }} $</h5>
                     <!-- <p class="card-text"> {{product.description }}</p> -->
@@ -182,8 +192,9 @@
             <div class="panel panel-default">
                 <div class="row justify-content-end">
                     <a href="" class="col-4">
-                        <button type="button" class="btn btn-primary glyphicon-chevron-down  panel-collapsed" data-toggle="dropdown">
-                           Chat Q/A
+                        <button type="button" class="btn btn-primary glyphicon-chevron-down  panel-collapsed"
+                            data-toggle="dropdown">
+                            Chat Q/A
                         </button>
                     </a>
 
@@ -199,7 +210,8 @@
                                     <div class="card-header msg_head">
                                         <div class="d-flex bd-highlight">
                                             <div class="img_cont">
-                                                <img src="https://clipartart.com/images/admin-icon-clipart-5.jpg" class="rounded-circle user_img">
+                                                <img src="https://clipartart.com/images/admin-icon-clipart-5.jpg"
+                                                    class="rounded-circle user_img">
                                                 <span class="online_icon"></span>
                                             </div>
                                             <div class="user_info">
@@ -214,7 +226,8 @@
                                         {% if exist_mess %} {% for mes in chat %} {% if mes.admin %}
                                         <div class="d-flex justify-content-start mb-4">
                                             <div class="img_cont_msg">
-                                                <img src="https://clipartart.com/images/admin-icon-clipart-5.jpg" class="rounded-circle user_img_msg">
+                                                <img src="https://clipartart.com/images/admin-icon-clipart-5.jpg"
+                                                    class="rounded-circle user_img_msg">
                                             </div>
                                             <div class="msg_cotainer">
                                                 <p>{{ mes.message}}</p> <br>
@@ -230,7 +243,8 @@
                                                 <span class="msg_time_send"> {{mes.pub_date}}</span>
                                             </div>
                                             <div class="img_cont_msg">
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTuK63MKLKu2yTG4Wg5TmcLV1n2gfzgQ3b30nrNtji7vfw31W5g" class="rounded-circle user_img_msg">
+                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTuK63MKLKu2yTG4Wg5TmcLV1n2gfzgQ3b30nrNtji7vfw31W5g"
+                                                    class="rounded-circle user_img_msg">
                                             </div>
                                         </div>
                                         {% endif %} {%endfor%} {% endif %}
@@ -241,15 +255,17 @@
                                             <!-- <div class="input-group-append">
                               <span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span>
                           </div> -->
-                                            <textarea name="" id="textsend" class="form-control type_msg" placeholder="Type your message..."></textarea>
+                                            <textarea name="" id="textsend" class="form-control type_msg"
+                                                placeholder="Type your message..."></textarea>
                                             <div class="input-group-append">
                                                 <span class="input-group-text  send_btn" id="Sbtn"><img
-                    src="https://s3.us-east-2.amazonaws.com/upload-icon/uploads/icons/png/18556509761553771441-256.png"
-                    alt="" class="sendbtn"></i></span>
+                                                        src="https://s3.us-east-2.amazonaws.com/upload-icon/uploads/icons/png/18556509761553771441-256.png"
+                                                        alt="" class="sendbtn"></i></span>
                                             </div>
                                         </div>
                                     </div>
-                                    <audio id="music_id" src="/media/sms-alert-1-daniel_simon.mp3" preload="auto"></audio>
+                                    <audio id="music_id" src="/media/sms-alert-1-daniel_simon.mp3"
+                                        preload="auto"></audio>
                                 </div>
                             </div>
                         </div>
@@ -261,7 +277,8 @@
 
         <div class="d_c_h">
             <a target="_blank" href="https://web.whatsapp.com/send?phone=+380958869560&amp;text=" class="nofocus">
-                <div class="waqfaq" id="style-4" data-ccw="style-4" style="background-color: #15f80080; color: rgba(0, 0, 0, 0.6)">
+                <div class="waqfaq" id="style-4" data-ccw="style-4"
+                    style="background-color: #15f80080; color: rgba(0, 0, 0, 0.6)">
                     <img src="/media/whatsapp-logo-32x32.png" class="" id="s4-icon" data-ccw="style-4" alt="WhatsApp">
                     <em>WhatsApp Us</em></div>
             </a>
@@ -280,14 +297,14 @@
     <script src='{% static "js/jquery.js" %}'></script>
     <script>
         var first = true
-        window.onload = function() {
+        window.onload = function () {
             $('.panel-body').slideUp();
         }
 
 
-        $(document).ready(function() {
+        $(document).ready(function () {
 
-            $('.glyphicon-chevron-down').on("click", function(e) {
+            $('.glyphicon-chevron-down').on("click", function (e) {
                 var $this = $(this);
                 if (!$this.hasClass('panel-collapsed')) {
                     $this.parents('.panel').find('.panel-body').slideUp();
@@ -303,8 +320,8 @@
             })
         })
 
-        $(document).ready(function() {
-            $('.add_to_cart').on("click", function(e) {
+        $(document).ready(function () {
+            $('.add_to_cart').on("click", function (e) {
                 e.preventDefault()
                 product_slug = $(this).attr('data-slug')
                 data = {
@@ -314,14 +331,14 @@
                     type: "GET",
                     url: '{% url "add_to_cart" %}',
                     data: data,
-                    success: function(data) {
+                    success: function (data) {
                         $('#cart_count').html(data.cart_total)
                     }
                 })
             })
         })
-        $(function() {
-            $(".c_h").click(function(e) {
+        $(function () {
+            $(".c_h").click(function (e) {
                 if ($(".chat_container").is(":visible")) {
                     $(".c_h .right_c .mini").text("+")
                 } else {
@@ -338,7 +355,7 @@
             'ws://' + window.location.host +
             '/ws/chat_view/' + roomName + '/');
         const messages = document.getElementById('dedd');
-        chatSocket.onmessage = function(e) {
+        chatSocket.onmessage = function (e) {
             var data = JSON.parse(e.data);
             var data = data['message'];
             document.getElementById('music_id').play()
@@ -373,10 +390,10 @@
         function scrollToBottom(messages) {
             messages.scrollTop = messages.scrollHeight;
         }
-        chatSocket.onclose = function(e) {
+        chatSocket.onclose = function (e) {
             console.error('Chat socket closed unexpectedly');
         };
-        chatSocket.onopen = function() {
+        chatSocket.onopen = function () {
             shouldScroll = messages.scrollTop + messages.clientHeight === messages.scrollHeight;
             /*
              * Get your messages, we'll just simulate it by appending a new one syncronously.
@@ -388,13 +405,13 @@
         };
 
         document.querySelector('#textsend').focus();
-        document.querySelector('#textsend').onkeyup = function(e) {
+        document.querySelector('#textsend').onkeyup = function (e) {
             if (e.keyCode === 13) { // enter, return
                 document.querySelector('#Sbtn').click();
             }
         };
 
-        document.querySelector('#Sbtn').onclick = function(e) {
+        document.querySelector('#Sbtn').onclick = function (e) {
             var messageInputDom = document.querySelector('#textsend');
             var message = messageInputDom.value;
 
@@ -403,7 +420,7 @@
                 'message': message,
                 'command': 'new_message',
                 'chat_id': roomName
-                    // 'request': requestmessage,
+                // 'request': requestmessage,
             }));
 
             messageInputDom.value = '';

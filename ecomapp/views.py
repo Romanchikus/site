@@ -23,10 +23,10 @@ from .utils import *
 class Base(Cart_and_chat_init ,View):
     context = { 'products': Product.objects.all()}
     template_name='base.html'
+        
 
     def get(self, request):
         return self.get_base(request)
-        
 
 def login_view(request):
    
