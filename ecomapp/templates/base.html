@@ -15,6 +15,7 @@
     <!-- Bootstrap core CSS -->
     <link href='{% static "css/r1.css" %}' rel="stylesheet">
     <link href='{% static "css/bootstrap.min.css" %}' rel="stylesheet">
+    <link href='{% static "/open-iconic/font/css/open-iconic.css" %}' rel="stylesheet">
 
 
 
@@ -28,7 +29,8 @@
 
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #A0434E;">
         <div class="container">
-            <a class="navbar-brand custom_border text-light" style="background-color: #324E75;" href="{% url 'base' %}">Love*Shop</a>
+            <a class="navbar-brand custom_border text-light" style="background-color: #324E75;"
+                href="{% url 'base' %}">Love*Shop</a>
             <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span> -->
             <!-- </button> -->
@@ -46,32 +48,43 @@
                     {% endfor %}
                 </ul>
             </div>
-            
+
             {% endif %} {% if not request.user.is_authenticated %}
             <li>
                 Hi user!
             </li>
             <li>
-                <a class="ti" href='{% url "login" %}'>Log in</a>
+                <a class="ti" href='{% url "login" %}'>Log in
+                    <span class="oi" data-glyph="account-login"></span>
+                </a>
             </li>
             <li>
-                <a class="ti" href='{% url "registration" %}'>Registration</a>
+                <a class="ti" href='{% url "registration" %}'>Registration
+                    <span class="oi" data-glyph="account-login"></span>
+                </a>
             </li>
 
             {% else %}
 
             <li>
-                <a class="ti" href="{% url 'account' %}">Cabinet {{ request.user }}</a>
+                <a class="ti" href="{% url 'account' %}">Cabinet {{ request.user }}
+                    <span class="oi" data-glyph="home"></span>
+                </a>
             </li>
             <li>
-                <a class="ti" href="{% url 'logout' %}">Logout</a>
+                <a class="ti" href="{% url 'logout' %}"> Logout
+                    <span class="oi" data-glyph="account-logout"></span>
+                </a>
+
             </li>
             {% endif %}
             <div class="navbar-nav ml-auto">
 
                 <li>
-                    <a class="nav-link" href="{% url 'cart' %}"> Cart <span class="badge badge-success"
-                            id="cart_count">{{ cart.item.count }}</span></a>
+                    <a class="nav-link" href="{% url 'cart' %}">
+                        Cart <span class="badge badge-success" id="cart_count">
+                            <span class="oi" data-glyph="cart"></span>
+                            {{ cart.item.count }}</span></a>
                 </li>
             </div>
 
@@ -91,6 +104,12 @@
         {%block content%}
 
 
+        <!-- <div class="beut_butt">
+            <a href="#">
+                <p><span class="bg"></span><span class="base"></span><span class="text">Play
+                        Valorant</span></p>
+            </a>
+        </div> -->
         <div class="row">
 
             <div class="col-lg-3">
@@ -106,11 +125,11 @@
             </div>
             <!-- /.col-lg-3 -->
 
-            <div class="col-lg-9" >
+            <div class="col-lg-9">
 
-                <div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel" >
+                <div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
 
-                    <div class="carousel-inner " role="listbox" >
+                    <div class="carousel-inner " role="listbox">
                         {% for product in products %} {% if forloop.first %}
                         <div class="carousel-item active car_item">
                             <img class="center-block" src={{product.image.url}} style="border-radius: 2em/2em">
@@ -194,7 +213,7 @@
                     <a href="" class="col-4">
                         <button type="button" class="btn btn-primary glyphicon-chevron-down  panel-collapsed"
                             data-toggle="dropdown">
-                            Chat Q/A
+                            <span class="oi" data-glyph="people"></span> Chat
                         </button>
                     </a>
 
