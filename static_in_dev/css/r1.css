@@ -9,9 +9,32 @@
     line-height: 32px;
 }
 
+.navbar{
+    background-color: #A0434E;
+}
+
+@media screen and (min-width: 800px) {
+    .container-product .row_prod {
+        margin-left: 15px;
+    }
+}
+
+@media screen and (min-width: 800px) {
+    .sidebar {
+        /* margin-left: 2em; */
+        background-color: #a0434e88;
+        border-radius: 1.5em 0em;
+    }
+}
+
 li a {
-    color: #ffffff;
+    color: #ffffff !important;
     text-decoration-style: solid;
+}
+li a:hover{
+    color: #ffffff;
+    background-color: #324E75;
+    border-radius:  1em 0em !important;
 }
 
 .control_style{
@@ -23,17 +46,52 @@ li a {
     background: #a0434e9a !important;
 }
 
+.custom_title{
+    border: 0.1em solid !important;
+    background-color: #324E75;
+    border-color: black !important;
+    border-radius:  1em 0em !important;
+}
+
+.custom_category{
+    background-color:  #a0434eb0 !important;
+    color: white !important;
+    border-radius: 1em 0em !important;
+}
+
+.custom_category:hover{
+    background-color:  #a0434ef6 !important;
+}
+
+.sidebar {
+    padding: 1em !important;
+}
+
+.sidebar img{
+    margin-bottom: 1em;
+}
+
 .custom_border{
     border: 0.1em solid !important;
     border-color: #A0434E !important;
-    border-radius: 3em;
+    border-radius: 3em !important;
 }
 
 .car_item{
     background-color: rgba(255, 255, 255, 0) !important;
 }
 
+.product_base img{
+    background-color: rgba(255, 255, 255, 0) !important;
+    border-radius: 1em 0em !important;
+    border-style: solid;
+    border-color: #324E75 !important;
+}
 
+.product_base h4 a{
+    color: #324E75;
+    text-shadow: 1px 1px 1px #A0434E ;
+}
 
 .d_c_h {
     /* width:300px; */
@@ -506,7 +564,8 @@ li {
 .card {
     height: 500px;
     border-radius: 15px !important;
-    background-color: rgba(0, 0, 0, 0.4) !important;
+    /* background-color: rgba(0, 0, 0, 0.4) !important; */
+    background-color: #A0434E !important;
 }
 
 .contacts_body {
@@ -763,7 +822,7 @@ li {
   
 .beut_butt {
     display: -webkit-box;
-    display: flex;
+    display: contents;
     height: 100vh;
     -webkit-box-align: center;
             align-items: center;
@@ -775,8 +834,8 @@ li {
   }
   .beut_butt a {
     width: 100%;
-    max-width: 240px;
-    height: 54px;
+    max-width: 140px;
+    height: 34px;
     padding: 8px;
     font-size: 0.8rem;
     font-weight: 900;
@@ -785,7 +844,7 @@ li {
     text-transform: uppercase;
     text-decoration: none;
     box-shadow: 0 0 0 1px inset rgba(236, 232, 225, 0.3);
-    position: relative;
+    position: absolute;
     margin: 10px 0;
   }
   .beut_butt a.white:hover > p {

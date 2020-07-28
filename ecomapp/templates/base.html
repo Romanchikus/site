@@ -27,19 +27,14 @@
     <div class="bg bg3"></div>
 
 
-    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #A0434E;">
+    <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <a class="navbar-brand custom_border text-light" style="background-color: #324E75;"
-                href="{% url 'base' %}">Love*Shop</a>
-            <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span> -->
-            <!-- </button> -->
+            <a class="navbar-brand custom_title text-light" href="{% url 'base' %}">Love*Shop</a>
             {% if not request.get_full_path == '/' %}
             <div class="dropdown">
                 <button id="dLabel" type="button" class="btn btn-danger" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
                     Category
-                    <!-- <span class="caret"></span> -->
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dLabel">
                     {% for category in categories %}
@@ -49,35 +44,38 @@
                 </ul>
             </div>
 
-            {% endif %} {% if not request.user.is_authenticated %}
-            <li>
-                Hi user!
-            </li>
-            <li>
-                <a class="ti" href='{% url "login" %}'>Log in
-                    <span class="oi" data-glyph="account-login"></span>
-                </a>
-            </li>
-            <li>
-                <a class="ti" href='{% url "registration" %}'>Registration
-                    <span class="oi" data-glyph="account-login"></span>
-                </a>
-            </li>
-
-            {% else %}
-
-            <li>
-                <a class="ti" href="{% url 'account' %}">Cabinet {{ request.user }}
-                    <span class="oi" data-glyph="home"></span>
-                </a>
-            </li>
-            <li>
-                <a class="ti" href="{% url 'logout' %}"> Logout
-                    <span class="oi" data-glyph="account-logout"></span>
-                </a>
-
-            </li>
             {% endif %}
+            <div class="navbar-nav text-center">
+                {% if not request.user.is_authenticated %}
+                <li class="ti nav-link">
+                    Hi user!
+                </li>
+                <li>
+                    <a class="ti nav-link" href='{% url "login" %}'>Log in
+                        <span class="oi" data-glyph="account-login"></span>
+                    </a>
+                </li>
+                <li>
+                    <a class="ti nav-link" href='{% url "registration" %}'>Registration
+                        <span class="oi" data-glyph="flag"></span>
+                    </a>
+                </li>
+
+                {% else %}
+
+                <li>
+                    <a class="ti nav-link" href="{% url 'account' %}">Cabinet {{ request.user }}
+                        <span class="oi" data-glyph="home"></span>
+                    </a>
+                </li>
+                <li>
+                    <a class="ti  nav-link" href="{% url 'logout' %}"> Logout
+                        <span class="oi" data-glyph="account-logout"></span>
+                    </a>
+
+                </li>
+                {% endif %}
+            </div>
             <div class="navbar-nav ml-auto">
 
                 <li>
@@ -102,37 +100,30 @@
     <div class="container">
         <!-- Page Content -->
         {%block content%}
-
-
-        <!-- <div class="beut_butt">
-            <a href="#">
-                <p><span class="bg"></span><span class="base"></span><span class="text">Play
-                        Valorant</span></p>
-            </a>
-        </div> -->
+        
         <div class="row">
 
             <div class="col-lg-3">
-                <br><br><br>
+                <br>
+                <h2 class="text-center">Categories</h2>
                 <!-- <h3 class="my-4">я Name</h3> -->
                 <div class="list-group">
                     {% for category in categories%}
                     <a href="{{ category.get_absolute_url }}"
-                        class="list-group-item list-group-item-action custom_border"
+                        class="list-group-item list-group-item-action custom_category"
                         style=" text-align:center;  "><strong>{{category.name}}</strong></a> {% endfor %}
                 </div>
 
             </div>
-            <!-- /.col-lg-3 -->
 
-            <div class="col-lg-9">
+            <div class="col-lg-7">
 
                 <div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
 
                     <div class="carousel-inner " role="listbox">
                         {% for product in products %} {% if forloop.first %}
                         <div class="carousel-item active car_item">
-                            <img class="center-block" src={{product.image.url}} style="border-radius: 2em/2em">
+                            <img class="center-block" src={{product.image.url}} >
                             <br>
                             <p class="text-center"><a href="{{ product.get_absolute_url}}"><button
                                         class="btn btn-primary"
@@ -140,7 +131,7 @@
                         </div>
                         {%else%}
                         <div class="carousel-item  car_item">
-                            <img class="center-block" src={{product.image.url}} alt="" style="border-radius: 2em/2em">
+                            <img class="center-block" src={{product.image.url}} >
                             <br>
                             <p class="text-center"><a href="{{ product.get_absolute_url}}"><button
                                         class="btn btn-primary"
@@ -165,144 +156,156 @@
 
 
             </div>
-
-            <!-- /.col-lg-9 -->
-
+            <div class="col-lg-2" style="background-color: rgba(240, 235, 235, 0.61);">
+                <br><p>ADS</p>
+                <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
+                style="max-width: 100%;" alt="">
+            </div>
         </div>
-        <!-- /.row -->
+    </div>
+    {% if user.is_superuser %}
+    <a class="link" href="{% url 'chat_detail'  %}">Admin Chats</a> {% elif chat_id%}
+    <a class="link" href="{% url 'chat_view' chat_id=chat_id %}">Support chating</a> {% else %}
+    <a class="link" href="{% url 'chat_view' chat_id=0 %}">Support chating</a> {% endif %}
 
-        <!-- /.row -->
-        {% if user.is_superuser %}
-        <a class="link" href="{% url 'chat_detail'  %}">Admin Chats</a> {% elif chat_id%}
-        <a class="link" href="{% url 'chat_view' chat_id=chat_id %}">Support chating</a> {% else %}
-        <a class="link" href="{% url 'chat_view' chat_id=0 %}">Support chating</a> {% endif %}
-
+    <div class="container-product">
         <div class="row">
-            {% for product in products %}
-            <div class="col">
-                <div class="text-center ">
-                    <a href="{{ product.get_absolute_url }} ">
-                        <img class="img-responsive custom_border" style="width: auto;
-                        max-height: 215px;  " src="{{ product.image.url }}">
-                    </a>
+            <div class="col-lg-9">
+                <div class="row row_prod">
+                    {% for product in products %}
+                    <div class="col-lg-4 product_base">
+                        <div class="text-center ">
+                            <a href="{{ product.get_absolute_url }} ">
+                                <img class="img-responsive " style="width: 100%;
+                            max-height: 100%;" src="{{ product.image.url }}">
+                            </a>
 
+                        </div>
+
+                        <div class="text-center">
+                            <h4 class="card-title" style="text-decoration: none">
+                                <a href="{{ product.get_absolute_url }}">{{product.title|split}}</a>
+                            </h4>
+                            <h5>{{ product.price }} $</h5>
+                            <!-- <p class="card-text"> {{product.description }}</p> -->
+                        </div>
+
+                        <p class='text-center'>
+                            <a href='#' class='add_to_cart' data-slug='{{ product.slug }}'>
+                                <button class='btn btn-danger' style="border-radius: 1em/1em">Add to bin</button>
+                            </a>
+                        </p>
+                    </div>
+                    {% endfor %}
                 </div>
+            </div>
+            <div class="col-lg-2 sidebar">
+                {% for product in products %}
+                <a href="{{ product.get_absolute_url }} ">
+                    <img class="img-responsive " style="width: 100%;
+                max-height: 100%;" src="{{ product.image.url }}">
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+    </div>
+    {%endblock content%}
 
-                <div class="text-center">
-                    <h4 class="card-title" style="text-decoration: none">
-                        <a href="{{ product.get_absolute_url }}">{{product.title|split}}</a>
-                    </h4>
-                    <h5>{{ product.price }} $</h5>
-                    <!-- <p class="card-text"> {{product.description }}</p> -->
-                </div>
+    <div class="d_c_h1">
+        <div class="panel panel-default">
+            <div class="row justify-content-end">
+                <a href="" class="col-4">
+                    <button type="button" class="btn btn-primary glyphicon-chevron-down  panel-collapsed"
+                        data-toggle="dropdown">
+                        <span class="oi" data-glyph="people"></span> Chat
+                    </button>
+                </a>
 
-                <p class='text-center'>
-                    <a href='#' class='add_to_cart' data-slug='{{ product.slug }}'>
-                        <button class='btn btn-danger' style="border-radius: 1em/1em">Add to bin</button>
-                    </a>
-                </p>
 
             </div>
-            {% endfor %}
-        </div>
-        {%endblock content%}
+            <div class="panel-body msg_container_base">
 
-        <div class="d_c_h1">
-            <div class="panel panel-default">
-                <div class="row justify-content-end">
-                    <a href="" class="col-4">
-                        <button type="button" class="btn btn-primary glyphicon-chevron-down  panel-collapsed"
-                            data-toggle="dropdown">
-                            <span class="oi" data-glyph="people"></span> Chat
-                        </button>
-                    </a>
+                <div class="container-fluid h-100">
+                    <div class="row justify-content-center h-100">
+                        <div class="col-12 chat">
 
-
-                </div>
-                <div class="panel-body msg_container_base">
-
-                    <div class="container-fluid h-100">
-                        <div class="row justify-content-center h-100">
-                            <div class="col-12 chat">
-
-                                <div class="card">
-                                    <div class="card-header msg_head">
-                                        <div class="d-flex bd-highlight">
-                                            <div class="img_cont">
-                                                <img src="https://clipartart.com/images/admin-icon-clipart-5.jpg"
-                                                    class="rounded-circle user_img">
-                                                <span class="online_icon"></span>
-                                            </div>
-                                            <div class="user_info">
-                                                <span>Chat with Admin</span>
-                                                <!-- <p>1767 Messages</p> -->
-                                            </div>
-
+                            <div class="card">
+                                <div class="card-header msg_head">
+                                    <div class="d-flex bd-highlight">
+                                        <div class="img_cont">
+                                            <img src="https://clipartart.com/images/admin-icon-clipart-5.jpg"
+                                                class="rounded-circle user_img">
+                                            <span class="online_icon"></span>
+                                        </div>
+                                        <div class="user_info">
+                                            <span>Chat with Admin</span>
+                                            <!-- <p>1767 Messages</p> -->
                                         </div>
 
                                     </div>
-                                    <div class="card-body msg_card_body " id="dedd">
-                                        {% if exist_mess %} {% for mes in chat %} {% if mes.admin %}
-                                        <div class="d-flex justify-content-start mb-4">
-                                            <div class="img_cont_msg">
-                                                <img src="https://clipartart.com/images/admin-icon-clipart-5.jpg"
-                                                    class="rounded-circle user_img_msg">
-                                            </div>
-                                            <div class="msg_cotainer">
-                                                <p>{{ mes.message}}</p> <br>
-                                                <span class="msg_time_send">{{mes.pub_date}}</span>
-                                            </div>
-                                        </div>
 
-                                        {% else %}
-                                        <div class="d-flex justify-content-end mb-4">
-                                            <div class="msg_cotainer_send">
-                                                {{ mes.message}}
-                                                <br>
-                                                <span class="msg_time_send"> {{mes.pub_date}}</span>
-                                            </div>
-                                            <div class="img_cont_msg">
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTuK63MKLKu2yTG4Wg5TmcLV1n2gfzgQ3b30nrNtji7vfw31W5g"
-                                                    class="rounded-circle user_img_msg">
-                                            </div>
+                                </div>
+                                <div class="card-body msg_card_body " id="dedd">
+                                    {% if exist_mess %} {% for mes in chat %} {% if mes.admin %}
+                                    <div class="d-flex justify-content-start mb-4">
+                                        <div class="img_cont_msg">
+                                            <img src="https://clipartart.com/images/admin-icon-clipart-5.jpg"
+                                                class="rounded-circle user_img_msg">
                                         </div>
-                                        {% endif %} {%endfor%} {% endif %}
-
+                                        <div class="msg_cotainer">
+                                            <p>{{ mes.message}}</p> <br>
+                                            <span class="msg_time_send">{{mes.pub_date}}</span>
+                                        </div>
                                     </div>
-                                    <div class="card-footer">
-                                        <div class="input-group">
-                                            <!-- <div class="input-group-append">
+
+                                    {% else %}
+                                    <div class="d-flex justify-content-end mb-4">
+                                        <div class="msg_cotainer_send">
+                                            {{ mes.message}}
+                                            <br>
+                                            <span class="msg_time_send"> {{mes.pub_date}}</span>
+                                        </div>
+                                        <div class="img_cont_msg">
+                                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTuK63MKLKu2yTG4Wg5TmcLV1n2gfzgQ3b30nrNtji7vfw31W5g"
+                                                class="rounded-circle user_img_msg">
+                                        </div>
+                                    </div>
+                                    {% endif %} {%endfor%} {% endif %}
+
+                                </div>
+                                <div class="card-footer">
+                                    <div class="input-group">
+                                        <!-- <div class="input-group-append">
                               <span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span>
                           </div> -->
-                                            <textarea name="" id="textsend" class="form-control type_msg"
-                                                placeholder="Type your message..."></textarea>
-                                            <div class="input-group-append">
-                                                <span class="input-group-text  send_btn" id="Sbtn"><img
-                                                        src="https://s3.us-east-2.amazonaws.com/upload-icon/uploads/icons/png/18556509761553771441-256.png"
-                                                        alt="" class="sendbtn"></i></span>
-                                            </div>
+                                        <textarea name="" id="textsend" class="form-control type_msg"
+                                            placeholder="Type your message..."></textarea>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text  send_btn" id="Sbtn"><img
+                                                    src="https://s3.us-east-2.amazonaws.com/upload-icon/uploads/icons/png/18556509761553771441-256.png"
+                                                    alt="" class="sendbtn"></i></span>
                                         </div>
                                     </div>
-                                    <audio id="music_id" src="/media/sms-alert-1-daniel_simon.mp3"
-                                        preload="auto"></audio>
                                 </div>
+                                <audio id="music_id" src="/media/sms-alert-1-daniel_simon.mp3" preload="auto"></audio>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
 
-        <div class="d_c_h">
-            <a target="_blank" href="https://web.whatsapp.com/send?phone=+380958869560&amp;text=" class="nofocus">
-                <div class="waqfaq" id="style-4" data-ccw="style-4"
-                    style="background-color: #15f80080; color: rgba(0, 0, 0, 0.6)">
-                    <img src="/media/whatsapp-logo-32x32.png" class="" id="s4-icon" data-ccw="style-4" alt="WhatsApp">
-                    <em>WhatsApp Us</em></div>
-            </a>
-        </div>
-
+    <div class="d_c_h">
+        <a target="_blank" href="https://web.whatsapp.com/send?phone=+380958869560&amp;text=" class="nofocus">
+            <div class="waqfaq" id="style-4" data-ccw="style-4"
+                style="background-color: #15f80080; color: rgba(0, 0, 0, 0.6)">
+                <img src="/media/whatsapp-logo-32x32.png" class="" id="s4-icon" data-ccw="style-4" alt="WhatsApp">
+                <em>WhatsApp Us</em></div>
+        </a>
     </div>
     <div id='footer' class="py-3 bg-dark">
 
