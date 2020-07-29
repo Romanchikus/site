@@ -74,6 +74,14 @@
                     </a>
 
                 </li>
+                {% if user.is_superuser %}
+                <li>
+                    <a class="ti  nav-link" href="{% url 'chat_detail'  %}"> Admin Chats
+                        <span class="oi" data-glyph="account-logout"></span>
+                    </a>
+
+                </li>
+                {% endif %}
                 {% endif %}
             </div>
             <div class="navbar-nav ml-auto">
@@ -100,7 +108,7 @@
     <div class="container">
         <!-- Page Content -->
         {%block content%}
-        
+
         <div class="row">
 
             <div class="col-lg-3">
@@ -123,7 +131,7 @@
                     <div class="carousel-inner " role="listbox">
                         {% for product in products %} {% if forloop.first %}
                         <div class="carousel-item active car_item">
-                            <img class="center-block" src={{product.image.url}} >
+                            <img class="center-block" src={{product.image.url}}>
                             <br>
                             <p class="text-center"><a href="{{ product.get_absolute_url}}"><button
                                         class="btn btn-primary"
@@ -131,7 +139,7 @@
                         </div>
                         {%else%}
                         <div class="carousel-item  car_item">
-                            <img class="center-block" src={{product.image.url}} >
+                            <img class="center-block" src={{product.image.url}}>
                             <br>
                             <p class="text-center"><a href="{{ product.get_absolute_url}}"><button
                                         class="btn btn-primary"
@@ -157,20 +165,17 @@
 
             </div>
             <div class="col-lg-2" style="background-color: rgba(240, 235, 235, 0.61);">
-                <br><p>ADS</p>
+                <br>
+                <p>ADS</p>
                 <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
-                style="max-width: 100%;" alt="">
+                    style="max-width: 100%;" alt="">
             </div>
         </div>
     </div>
-    {% if user.is_superuser %}
-    <a class="link" href="{% url 'chat_detail'  %}">Admin Chats</a> {% elif chat_id%}
-    <a class="link" href="{% url 'chat_view' chat_id=chat_id %}">Support chating</a> {% else %}
-    <a class="link" href="{% url 'chat_view' chat_id=0 %}">Support chating</a> {% endif %}
 
     <div class="container-product">
         <div class="row">
-            <div class="col-lg-9">
+            <div class="col-lg-10">
                 <div class="row row_prod">
                     {% for product in products %}
                     <div class="col-lg-4 product_base">
@@ -209,10 +214,9 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid">
-    </div>
     {%endblock content%}
 
+    {% if not user.is_superuser %}
     <div class="d_c_h1">
         <div class="panel panel-default">
             <div class="row justify-content-end">
@@ -240,7 +244,7 @@
                                             <span class="online_icon"></span>
                                         </div>
                                         <div class="user_info">
-                                            <span>Chat with Admin</span>
+                                            <span>We can help you </span>
                                             <!-- <p>1767 Messages</p> -->
                                         </div>
 
@@ -297,6 +301,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
 
 
     <div class="d_c_h">

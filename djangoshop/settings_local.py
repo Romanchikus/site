@@ -85,8 +85,11 @@ WSGI_APPLICATION = 'djangoshop.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': "site",
+        'PASSWORD' : 'site',
+        'HOST' : '0.0.0.0',
+        'PORT' : '5432',
         # 'TEST': {
         #     'NAME': os.path.join(BASE_DIR, 'db_test.sqlite3')
         # }

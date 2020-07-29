@@ -2,25 +2,34 @@
 {%load static%}
 {%block content%}
 {% if user.is_superuser %}
-    <p>Hello, admin.</p>
-    <table class="table table-striped dedd" >
-        <thead>
-                <tr>
-    <th scope="col">
-        User
-    </th>
-    <th scope="col">
-        Chat
-    </th>
-    </tr>
-    </thead>
-    {% for chat in chats %}
-    <tr>
-        <td><strong class="comment-title"> {{ chat.member }} </strong></td>
-        <td> <br> <strong class='comment-same'> <a href="{{ chat.get_absolute_url }}">{{ chat.get_absolute_url }}</a> </strong></td>
-    </tr>   
-    {% endfor %}
-</table>
+<p>Hello, admin.</p>
+<div class="container ">
+
+    <table class="table table-striped dedd">
+        <tr class="col-8 justify-content-md-center row">
+            <th scope="col" class="col-6">
+                User
+            </th>
+            <th scope="col">
+                Chat
+            </th>
+        </tr>
+        {% for chat in chats %}
+        <tr class="col-8 justify-content-md-center row">
+            <td class="col-6 ">
+                <strong class="comment-title"> {{ chat.member }} </strong>
+            </td>
+            <td class="col-6">
+                <a class="btn btn-danger d-block" href="{{ chat.get_absolute_url }}">
+                    <strong class='comment-same'>{{ chat.id }}
+                        <span class="oi" data-glyph="account-login"></span></strong>
+                </a>
+            </td>
+
+        </tr>
+        {% endfor %}
+    </table>
+</div>
 {% endif %}
 
 {%endblock content%}

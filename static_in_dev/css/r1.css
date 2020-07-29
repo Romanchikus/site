@@ -22,7 +22,6 @@
 @media screen and (min-width: 800px) {
     .sidebar {
         /* margin-left: 2em; */
-        background-color: #a0434e88;
         border-radius: 1.5em 0em;
     }
 }
@@ -56,7 +55,7 @@ li a:hover{
 .custom_category{
     background-color:  #a0434eb0 !important;
     color: white !important;
-    border-radius: 1em 0em !important;
+    border-radius: 2em  1em 2em 0em !important;
 }
 
 .custom_category:hover{
@@ -65,10 +64,21 @@ li a:hover{
 
 .sidebar {
     padding: 1em !important;
+    text-align: center;
+    background-color: #a0434e88;
+}
+
+@media screen and (max-width: 768px){
+    .sidebar img{
+        border-radius: 1.5em 0em;
+        max-width: 80%;
+    }
 }
 
 .sidebar img{
     margin-bottom: 1em;
+    border-style: double;
+    padding: 5px;
 }
 
 .custom_border{
@@ -657,8 +667,8 @@ li {
 }
 
 .user_img {
-    height: 70px;
-    width: 70px;
+    height: 30px;
+    width: 30px;
     border: 1.5px solid #f5f6fa;
 }
 
@@ -670,8 +680,8 @@ li {
 
 .img_cont {
     position: relative;
-    height: 70px;
-    width: 70px;
+    height: 30px;
+    width: 30px;
 }
 
 .img_cont_msg {
@@ -681,13 +691,13 @@ li {
 
 .online_icon {
     position: absolute;
-    height: 15px;
-    width: 15px;
+    height: 5px;
+    width: 5px;
     background-color: #4cd137;
     border-radius: 50%;
-    bottom: 0.2em;
-    right: 0.4em;
-    border: 1.5px solid white;
+    bottom: 1.8em;
+    right: -0.2em;
+    border: 0.3px solid white;
 }
 
 .offline {
@@ -695,9 +705,7 @@ li {
 }
 
 .user_info {
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-left: 15px;
+    margin: auto;
 }
 
 .user_info span {

@@ -130,11 +130,11 @@ class Cart(models.Model):
         cart.save()
 
 
-ORDER_STATUS_CHOICES = {
+ORDER_STATUS_CHOICES = [
     ('Accepted for processing','Accepted for processing'),
     ('Performed', 'Performed'),
     ('Paid', 'Paid')
-}
+]
 class Order(models.Model):
 
     item = models.ForeignKey(Cart, on_delete=models.PROTECT, default="")
