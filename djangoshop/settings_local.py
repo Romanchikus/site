@@ -31,6 +31,7 @@ host = "ec2-3-22-194-198.us-east-2.compute.amazonaws.com"
 ALLOWED_HOSTS = [
     host,
     "localhost",
+    '*',
     ]
 os.environ['adress'] = host
 
