@@ -1,0 +1,14 @@
+# PostgreSQL
+# ------------------------------------------------------------------------------
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=site
+POSTGRES_USER=site
+POSTGRES_PASSWORD=site
+
+export POSTGRES_HOST=postgres
+export POSTGRES_PORT=5432
+export POSTGRES_DB=site
+export POSTGRES_USER=site
+export POSTGRES_PASSWORD=site
+export DATABASE_URL=postgres://site:site@postgres:5432/site
