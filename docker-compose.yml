@@ -21,6 +21,8 @@ services:
     env_file:
       - ./.envs/.local/.django
       - ./.envs/.local/.postgres
+    ports:
+      - "8008:8008"
     links:
       - redis
     command: /start
