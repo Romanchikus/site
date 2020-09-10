@@ -14,19 +14,21 @@ services:
     container_name: site_django
     depends_on:
       - postgres
-      - redis
+      # - redis
     volumes:
       - .:/site
-      - static_volume:/site/static_in_dev
+      - static_volume:/site/static
+    expose:
+      - 8008
     env_file:
       - ./.envs/.local/.django
       - ./.envs/.local/.postgres
-    links:
-      - redis
+    # links:
+    #   - redis
     command: /start
-    networks:
-      - nginx_network
-      - postgres_network
+    # networks:
+    #   - nginx_network
+    #   - postgres_network
 
   postgres:
     build:
@@ -41,30 +43,30 @@ services:
       - ./.envs/.local/.postgres
     ports:
       - "5432:5432"
-    networks:
-      - postgres_network
+    # networks:
+    #   - postgres_network
       
-  redis:
-    restart: always
-    image: "redis:alpine"
-    ports:
-      - "6379:6379"
+#   redis:
+#     restart: always
+#     image: "redis:alpine"
+#     ports:
+#       - "6379:6379"
   
   nginx:
     build: ./nginx
     volumes:
-      - .:/site
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - static_volume:/site/static_in_dev
+    #   - .:/site
+#       - ./nginx/conf.d:/etc/nginx/conf.d
+      - static_volume:/site/static
     ports:
       - 8000:80
     depends_on:
       - site_django
-    networks:
-      - nginx_network
+#     networks:
+#       - nginx_network
 
-networks:
-  nginx_network:
-    driver: bridge
-  postgres_network:
-    driver: bridge
+# networks:
+#   nginx_network:
+#     driver: bridge
+#   postgres_network:
+#     driver: bridge

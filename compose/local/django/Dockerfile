@@ -28,7 +28,12 @@ RUN chmod +x /entrypoint
 COPY ./compose/local/django/start /start
 RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
-
-WORKDIR /site
+ENV HOME=/site
+ENV APP_HOME=/site
+RUN mkdir $APP_HOME
+RUN mkdir $APP_HOME/static
+WORKDIR $APP_HOME
+COPY . $APP_HOME
+# WORKDIR /site
 
 ENTRYPOINT ["/entrypoint"]
