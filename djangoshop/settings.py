@@ -33,7 +33,7 @@ SECRET_KEY = env.str("DJANGO_SECRET_KEY", default="!!!SET DJANGO_SECRET_KEY!!!",
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DJANGO_DEBUG", True)
 
-host = "ec2-3-22-194-198.us-east-2.compute.amazonaws.com"
+host = "ec2-3-135-206-3.us-east-2.compute.amazonaws.com"
 
 # print('============',host)
 ALLOWED_HOSTS = [
