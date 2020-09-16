@@ -21,11 +21,12 @@ from .utils import *
 # urllib.request.urlopen('https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}'.format(token,chat_id,forma))
 
 class Base(Cart_and_chat_init ,View):
-    context = { 'products': Product.objects.all()}
+    
     template_name='base.html'
         
 
     def get(self, request):
+        self.context = { 'products': Product.objects.all()}
         return self.get_base(request)
 
 def login_view(request):

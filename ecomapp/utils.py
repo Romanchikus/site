@@ -25,18 +25,6 @@ class Cart_and_chat_init:
         return render(request, self.template_name, self.context)
 
     def chat_init(self, request):
-        
-        # try:
-        #     if self.chat_id and request.user.is_superuser:
-        #         chat = Chat.objects.get(id=self.chat_id)
-        #         member = Member.objects.get(chat=chat)
-        #     else:
-        #         chat, _ = Chat.objects.get_or_create(member=member)
-        # except:
-        #     member = Member(member=member_id)
-        #     member.save()
-        #     chat = Chat(member=member)
-        #     chat.save()
         if self.chat_id and request.user.is_superuser:
             chat = Chat.objects.get(id=self.chat_id)
             member = Member.objects.get(chat=chat)
