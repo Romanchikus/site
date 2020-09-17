@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 from django.views.generic import View, DetailView
 import urllib.request
 from .utils import *
+from django.contrib.auth.views import LoginView
 
 
 
@@ -28,6 +29,10 @@ class Base(Cart_and_chat_init ,View):
     def get(self, request):
         self.context = { 'products': Product.objects.all()}
         return self.get_base(request)
+
+class CustomLoginView(LoginView):
+    template_name = 'login.html'
+
 
 def login_view(request):
    

@@ -19,8 +19,8 @@ services:
     volumes:
       - .:/site
       - static_volume:/site/static
-    expose:
-      - 8008
+    ports:
+      - 8008:8008
     env_file:
       - ./.envs/.local/.django
       - ./.envs/.local/.postgres
@@ -57,20 +57,20 @@ services:
       - "6379:6379"
     command: redis-server /usr/local/etc/redis/redis.conf
   
-  nginx_local:
-    build: 
-        context: .
-        dockerfile: ./nginx/Dockerfile.local
-    volumes:
-    #   - .:/site
-#       - ./nginx/conf.d:/etc/nginx/conf.d
-      - static_volume:/site/static
-    ports:
-      - 8000:8000
-    depends_on:
-      - site_django
-    links:
-      - redis
+#   nginx_local:
+#     build: 
+#         context: .
+#         dockerfile: ./nginx/Dockerfile.local
+#     volumes:
+#     #   - .:/site
+# #       - ./nginx/conf.d:/etc/nginx/conf.d
+#       - static_volume:/site/static
+#     ports:
+#       - 8000:8000
+#     depends_on:
+#       - site_django
+#     links:
+#       - redis
 #     networks:
 #       - nginx_network
 

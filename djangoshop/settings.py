@@ -35,7 +35,6 @@ DEBUG = env.bool("DJANGO_DEBUG", True)
 
 host = "ec2-3-135-206-3.us-east-2.compute.amazonaws.com"
 
-# print('============',host)
 ALLOWED_HOSTS = [
     host,
     "localhost",
@@ -88,23 +87,6 @@ TEMPLATES = [
 ASGI_APPLICATION = 'djangoshop.routing.application'
 WSGI_APPLICATION = 'djangoshop.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
-# DATABASES = {"default": env.db("DATABASE_URL")}
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': "site",
-#         'PASSWORD' : 'site',
-#         'HOST' : '0.0.0.0',
-#         'PORT' : '5432',
-#         # 'TEST': {
-#         #     'NAME': os.path.join(BASE_DIR, 'db_test.sqlite3')
-#         # }
-#     }
-# }
 DATABASES = {
     "default": {
         "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgresql_psycopg2"),
@@ -116,8 +98,8 @@ DATABASES = {
     }
 }
 
-# Password validation
-# https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
+LOGIN_REDIRECT_URL = 'base'
+LOGOUT_REDIRECT_URL = 'base'
 
 AUTH_PASSWORD_VALIDATORS = [
     {

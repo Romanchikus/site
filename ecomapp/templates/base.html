@@ -31,7 +31,7 @@
         <div class="container">
             <a class="navbar-brand custom_title text-light" href="{% url 'base' %}">Love*Shop</a>
             {% if not request.get_full_path == '/' %}
-            <div class="dropdown">
+            <div class="btn-group">
                 <button id="dLabel" type="button" class="btn btn-danger" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
                     Category
@@ -45,44 +45,45 @@
             </div>
 
             {% endif %}
-            <div class="navbar-nav text-center">
-                {% if not request.user.is_authenticated %}
-                <li class="ti nav-link">
-                    Hi user!
-                </li>
-                <li>
-                    <a class="ti nav-link" href='{% url "login" %}'>Log in
-                        <span class="oi" data-glyph="account-login"></span>
-                    </a>
-                </li>
-                <li>
-                    <a class="ti nav-link" href='{% url "registration" %}'>Registration
-                        <span class="oi" data-glyph="flag"></span>
-                    </a>
-                </li>
+            <div class="dropdown">
+                <button id="dLabel" type="button" class="btn ti" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">:::</button>
+                <ul class="dropdown-menu" aria-labelledby="dLabel">
+                    {% if not request.user.is_authenticated %}
+                    <li class="dropdown-item">
+                        Hi user!
+                    </li>
+                    <li class="dropdown-item">
+                        <a class="nav-link" href='{% url "login" %}'>Log in
+                            <span class="oi" data-glyph="account-login"></span>
+                        </a>
+                    </li>
+                    <li class="dropdown-item">
+                        <a class="nav-link" href='{% url "signup" %}'>Sign up
+                            <span class="oi" data-glyph="flag"></span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="dropdown-item">
+                        <a class="nav-lin" href="{% url 'account' %}">Cabinet {{ request.user }}
+                            <span class="oi" data-glyph="home"></span>
+                        </a>
+                    </li>
+                    <li class="dropdown-item">
+                        <a class="nav-lin" href="{% url 'logout' %}"> Logout
+                            <span class="oi" data-glyph="account-logout"></span>
+                        </a>
 
-                {% else %}
-
-                <li>
-                    <a class="ti nav-link" href="{% url 'account' %}">Cabinet {{ request.user }}
-                        <span class="oi" data-glyph="home"></span>
-                    </a>
-                </li>
-                <li>
-                    <a class="ti  nav-link" href="{% url 'logout' %}"> Logout
-                        <span class="oi" data-glyph="account-logout"></span>
-                    </a>
-
-                </li>
-                {% if user.is_superuser %}
-                <li>
-                    <a class="ti  nav-link" href="{% url 'chat_detail'  %}"> Admin Chats
-                        <span class="oi" data-glyph="account-logout"></span>
-                    </a>
-
-                </li>
-                {% endif %}
-                {% endif %}
+                    </li>
+                    {% if user.is_superuser %}
+                    <li class="dropdown-item">
+                        <a class="ti" href="{% url 'chat_detail'  %}"> Admin Chats
+                            <span class="oi" data-glyph="account-logout"></span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% endif %}
+                </ul>
             </div>
             <div class="navbar-nav ml-auto">
 
@@ -319,7 +320,6 @@
     </div>
 
 
-    <!-- Bootstrap core JavaScript -->
 
     <script src='{% static "js/jquery.js" %}'></script>
     <script>
