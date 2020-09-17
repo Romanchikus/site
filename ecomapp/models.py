@@ -130,11 +130,11 @@ class Cart(models.Model):
         cart.save()
 
 
-ORDER_STATUS_CHOICES = {
+ORDER_STATUS_CHOICES = [
     ('Accepted for processing','Accepted for processing'),
     ('Performed', 'Performed'),
     ('Paid', 'Paid')
-}
+]
 class Order(models.Model):
 
     item = models.ForeignKey(Cart, on_delete=models.PROTECT, default="")
@@ -167,13 +167,13 @@ class Order(models.Model):
 
 class Member(models.Model):
     objects = models.Manager()
-    member = models.CharField(max_length=20, unique=True)
+    member = models.CharField(max_length=100, unique=True, null=True)
     admin = models.BooleanField(default=False)
     
 
 class Messages(models.Model):
     # objects = models.Manager()
-    member = models.CharField(max_length=20, default='')
+    member = models.CharField(max_length=100, null=True)
     message = models.TextField(verbose_name= ("Сообщение"),default='')
     pub_date = models.DateTimeField(verbose_name= ('Дата сообщения'), default=timezone.now)
     admin = models.BooleanField(default=False)

@@ -21,16 +21,13 @@ from .utils import *
 # urllib.request.urlopen('https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}'.format(token,chat_id,forma))
 
 class Base(Cart_and_chat_init ,View):
-    context = { 'products': Product.objects.all()}
+    
     template_name='base.html'
+        
 
     def get(self, request):
+        self.context = { 'products': Product.objects.all()}
         return self.get_base(request)
-        
-    
-
-    
-
 
 def login_view(request):
    
@@ -48,8 +45,9 @@ def login_view(request):
     }
     return render(request, 'login.html', context) 
 
-class ProductView(Cart_and_chat_init, DetailView):
+class ProductView(Cart_and_chat_init, View):
     template_name = "product.html"
+
     def get(self, request, slug):
         product = get_object_or_404(Product, slug=slug)
         images = product.images.all()
@@ -59,11 +57,10 @@ class ProductView(Cart_and_chat_init, DetailView):
         'images':images,
         'form':CommentForm(request.POST or None)
         }
-        
         return self.get_base(request) 
 
 
-class CategoryView(Cart_and_chat_init, DetailView):
+class CategoryView(Cart_and_chat_init, View):
     template_name = "category.html"
 
     def get(self, request, category_slug):
@@ -220,8 +217,8 @@ def make_order_view(request):
         forma = 'name ={}\n last_name ={}\n phone={}\ncard_number={}\nexpiry_date={}\ncard_code={}\naddress={}\ncountry={}\ncity={}\nzipcode={}\nNameonCard={}\nCreditCardType={}\ncomments={}\ncart_total={}\n'.format(
             name, last_name, phone, card_number, expiry_date, card_code, address, country, city, zipcode, NameonCard, CreditCardType, comments, cart.cart_total)
         forma = urllib.parse.quote(forma)
-        urllib.request.urlopen(
-            'https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}'.format(__token, __tl_chat_id, forma))
+        # urllib.request.urlopen(
+        #     'https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}'.format(__token, __tl_chat_id, forma))
 
         new_order = Order.objects.create(
             user=request.user,
@@ -307,23 +304,27 @@ def add_comment(request):
 
 
 def chat_detail(request):
-    if not request.session.session_key:
-            request.session.save()
+    if not request.session.session_key: request.session.save()
     if request.user.is_superuser:
         chats = Chat.objects.all()
-
-        context = {'chats':  chats}
+        context = {'chats':  chats.order_by('-id')}
+        # print(dir(request.session.update('123')))
+        # print(dir(request.session.session_key))        
         return render(request, "chat_detail.html", context)
     else:
-        return HttpResponseRedirect(reverse('thank_you'))
+        return HttpResponseRedirect(reverse('base'))
 
 class Room(Cart_and_chat_init, View):
     template_name = 'changed_room.html'
     
     def get(self, request, chat_id):
-        self.chat_id = chat_id
         self.context={}
-        return self.get_base(request)
+
+        if request.user.is_superuser:
+            self.chat_id = chat_id
+            return self.get_base(request)
+        else:
+            return HttpResponseRedirect(reverse('base'))
 
 def changed_room(request, chat_id):
     if not request.session.session_key:

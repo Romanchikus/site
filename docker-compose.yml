@@ -1,0 +1,79 @@
+version: '3'
+
+volumes:
+  local_postgres_data: {}
+  local_postgres_data_backups: {}
+  static_volume:
+  redis: {}
+
+services:
+  site_django:
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    image: site_local_django1
+    container_name: site_django
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - .:/site
+      - static_volume:/site/static
+    expose:
+      - 8008
+    env_file:
+      - ./.envs/.local/.django
+      - ./.envs/.local/.postgres
+    links:
+      - redis
+    command: /start
+    # networks:
+    #   - nginx_network
+    #   - postgres_network
+
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgres/Dockerfile
+    image: site_production_postgres
+    container_name: postgres
+    volumes:
+      - local_postgres_data:/var/lib/postgresql/data
+      - local_postgres_data_backups:/backups
+    env_file:
+      - ./.envs/.local/.postgres
+    ports:
+      - "5432:5432"
+    # networks:
+    #   - postgres_network
+      
+  redis:
+    restart: always
+    image: "redis:alpine"
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf # feel free to omit this line if you want to stick with the default config
+      - "redis:/data"
+    ports:
+      - "6379:6379"
+    command: redis-server /usr/local/etc/redis/redis.conf
+  
+  nginx:
+    build: ./nginx
+    volumes:
+    #   - .:/site
+#       - ./nginx/conf.d:/etc/nginx/conf.d
+      - static_volume:/site/static
+    ports:
+      - 80:80
+    depends_on:
+      - site_django
+    links:
+      - redis
+#     networks:
+#       - nginx_network
+
+# networks:
+#   nginx_network:
+#     driver: bridge
+#   postgres_network:
+#     driver: bridge
