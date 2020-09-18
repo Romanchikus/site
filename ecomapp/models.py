@@ -24,14 +24,6 @@ def pre_save_category_slug(sender, instance, *args, **kwargs):
 pre_save.connect(pre_save_category_slug, sender=Category)
 
 
-
-# class Brand(models.Model):
-#    name = models.CharField(max_length =110)
-
-
-#    def __str__(self):
-#       return self.name
-
 def image_folder(instance, filename):
     filename = instance.slug +'.'+ filename.split('.')[1]
     return '{}/{}'.format(instance.slug, filename)
@@ -47,9 +39,13 @@ class Comment(models.Model):
     author = models.CharField(max_length= 120)
     comments = models.TextField()
 
+    def __str__(self):
+        return self.comments[:10]
+    def get_absolute_url(self):
+        return reverse('product_detail', kwargs= {'slug': self.product.slug})
+
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
-    # brand = models.ForeignKey(Brand, on_delete=models.PROTECT)
     title = models.CharField(max_length= 120)
     slug = models.SlugField()
     description = models.TextField()
@@ -153,7 +149,6 @@ class Order(models.Model):
     card_code = models.IntegerField()
     total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
     NameonCard = models.CharField(max_length=100)
-    CreditCardType = models.CharField(max_length=20)
 
     phone = models.CharField(max_length=20)
         
@@ -163,6 +158,8 @@ class Order(models.Model):
         
 
     def __unicode__(self):
+        return "Order № {0}".format(str(self.id))
+    def __str__(self):
         return "Order № {0}".format(str(self.id))
 
 class Member(models.Model):

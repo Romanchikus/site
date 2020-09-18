@@ -80,7 +80,6 @@ class OrderForm(forms.Form):
 	country = forms.CharField(required=True)
 	zipcode = forms.CharField(required=True)
 	NameonCard = forms.CharField(required=True,widget=forms.TextInput(attrs={'placeholder': 'Name Surname'}))
-	CreditCardType = forms.CharField(required=True,widget=forms.TextInput(attrs={'placeholder': 'mastercard'}))
 	# expiry_date.widget.attrs.update({'id_expiry_date_0' : 'your_id'})
 
 
