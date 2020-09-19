@@ -25,4 +25,5 @@ urlpatterns = [
     re_path(r'^add_comment/$', add_comment, name = 'add_comment'),
     re_path(r'^chat_view/(?P<chat_id>[-\w]+)/$', Room.as_view(), name = 'chat_view'),
     re_path(r'^chat_detail', chat_detail, name = 'chat_detail'),
+    path('add_order/', AddOrder.as_view(), name='update_order'),
 ]   

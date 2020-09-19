@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {%load static%}
 {% load functions %}
+{% block title %}{{ category.name }}{% endblock %}
 {%block content%}
 <div class="col-12">
     <h2 class="text-center"> {{ category.name }} </h2>

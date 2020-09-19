@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {%load static%}
 {%block content%}
+
+{% block title %} Account {{ request.user }} {% endblock %}
 <br>
 <div class="row">
 	<div class="col-sm-6 text-center">
@@ -10,10 +12,15 @@
 		<a class="nav-hr btn " href='{% url "password_change" %}'><span class='hr-txt'>
 				Change password
 			</span><span class="oi" data-glyph="lock-unlocked"></span></a>
-		<a class="nav-hr btn ml-2" href='{% url "admin:index" %}'><span class='hr-txt'>
-				Go admin panel
-			</span>
+		{% if user.is_superuser%}
+		<a class="nav-hr btn ml-2" href='{% url "admin:index" %}'>
+			<span class='hr-txt'>Go admin panel</span>
 			<span class="oi" data-glyph="command"></span></a>
+		{%else%}
+		<a class="nav-hr btn ml-2" href='{% url "update_order" %}'>
+			<span class='hr-txt'>Go admin panel</span>
+			<span class="oi" data-glyph="command"></span></a>
+		{%endif%}
 	</div>
 </div>
 <hr>

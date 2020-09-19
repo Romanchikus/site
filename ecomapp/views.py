@@ -8,11 +8,11 @@ from ecomapp.forms import OrderForm, RegistrationForm, LoginForm, CommentForm
 from django.contrib.auth import login, authenticate
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
-from django.views.generic import View, DetailView
+from django.views.generic import View, DetailView, UpdateView, TemplateView
 import urllib.request
 from .utils import *
 from django.contrib.auth.views import LoginView
-
+from django.urls import reverse_lazy
 
 
 
@@ -385,3 +385,17 @@ def message_to_list(message):
         'pub_date': str(message.pub_date.strftime(" %B %d,%Y, %A %I:%M%p ")),
         'admin': message.admin
         }
+
+
+class AddOrder(TemplateView):
+    template_name = 'add_order.html'
+    # success_url = reverse_lazy('account')
+
+    def update(self, request):
+        order_session = request.session['cart_id']
+        order = get_object_or_404(Order, 
+                order_session=order_session)
+        order.update(user=request.user)
+
+
+    
