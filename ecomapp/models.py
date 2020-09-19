@@ -135,11 +135,11 @@ class Order(models.Model):
 
     item = models.ForeignKey(Cart, on_delete=models.PROTECT, default="")
     objects = models.Manager()
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
-
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,
+            blank=True, null=True)
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
-    email = models.EmailField(max_length=254)
+    email = models.EmailField(max_length=254, blank=True, null=True)
     address  = models.CharField(max_length=254)
     city = models.CharField(max_length=254)
     country = models.CharField(max_length=254)
@@ -149,12 +149,13 @@ class Order(models.Model):
     card_code = models.IntegerField()
     total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
     NameonCard = models.CharField(max_length=100)
-
+    order_session = models.CharField(max_length=50)
     phone = models.CharField(max_length=20)
         
     date = models.DateTimeField(auto_now_add=True)
     comments = models.TextField()
-    status = models.CharField(max_length=200, choices=ORDER_STATUS_CHOICES)
+    status = models.CharField(max_length=200, choices=ORDER_STATUS_CHOICES, 
+            blank=True, null=True)
         
 
     def __unicode__(self):

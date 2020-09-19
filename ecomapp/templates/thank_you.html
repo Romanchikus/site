@@ -1,14 +1,31 @@
-
 {% extends 'base.html' %}
-
+{% load static %}
 
 {% block content %}
-
+<link href='{% static "css/thank.css" %}' rel="stylesheet">
 <div class='col-sm'>
 	<br><br><br>
 	<h3 class='text-center'>Thank you for your order! It is accepted for processing.
-			In the near future, the manager will contact you</h3>
-	<p class='text-center'><a href='/'><button class='btn btn'>Back to shopping</button></a></p>
-</div>
+		In the near future, the manager will contact you</h3>
+	{% if request.session.order_session and not request.user.is_authenticated %}
+	<h5 class='text-center text-danger'>If Sign up you can see your order
+		in account when put this code into suitable field</h5>
+	<div class="text-center">
+		<div class="input-group mb-1 offset-sm-3 col-sm-6">
+			<input type="text" class="form-control text-center" value="{{ request.session.order_session }}"
+				aria-describedby="basic-addon1" id="copy_func">
 
+
+			<div class="tooltip1 ml-1">
+				<button class="btn nav-hr" onclick="myFunction()" onmouseout="outFunc()">
+					<span class="tooltip1text" id="mytooltip1">Copy to clipboard</span>
+					Copy text</button>
+			</div>
+		</div>
+
+	</div>
+	{%endif%}
+	<p class='text-center'><a href='/'><button class='btn nav-hr'>Back to shopping</button></a></p>
+</div>
+<script src='{% static "js/thank_you.js" %}'></script>
 {% endblock content %}

