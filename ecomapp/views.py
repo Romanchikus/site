@@ -227,6 +227,8 @@ def make_order_view(request):
             user = None
         else:
             user = request.user
+        if not request.session.session_key:
+                request.session.save()
         # print('request.user ==== ', dir(user))
         new_order = Order.objects.create(
             user=user,
