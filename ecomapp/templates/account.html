@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 {%load static%}
+{% block title %} Account {{  request.user }} {% endblock %}
 {%block content%}
-
-{% block title %} Account {{ request.user }} {% endblock %}
 <br>
 <div class="row">
 	<div class="col-sm-6 text-center">
-		<h3 class="">Account user ' {{ request.user }} '</h3>
+		<h3 class="">Account: {{ request.user }} </h3>
 	</div>
 	<div class="col-sm-6 text-center">
 		<a class="nav-hr btn " href='{% url "password_change" %}'><span class='hr-txt'>
@@ -18,8 +17,8 @@
 			<span class="oi" data-glyph="command"></span></a>
 		{%else%}
 		<a class="nav-hr btn ml-2" href='{% url "update_order" %}'>
-			<span class='hr-txt'>Go admin panel</span>
-			<span class="oi" data-glyph="command"></span></a>
+			<span class='hr-txt'>Add unregistred order</span>
+			<span class="oi" data-glyph="plus"></span></a>
 		{%endif%}
 	</div>
 </div>
@@ -28,19 +27,19 @@
 <div class="row">
 	<table class='col-sm-8 col-lg-12 nav-hr '>
 		<tr class="">
-			<td class='text-center'> Order number </td>
-			<td class='text-center'> Order Date </td>
-			<td class='text-center'> Order Status </td>
-			<td class='text-center'> Order Cost </td>
-			<td class='text-center'> Order Details </td>
+			<td class='text-center p-2'> Order number </td>
+			<td class='text-center p-2'> Order Date </td>
+			<td class='text-center p-2'> Order Status </td>
+			<td class='text-center p-2'> Order Cost </td>
+			<td class='text-center p-2'> Order Details </td>
 		</tr>
 		{% for item in order %}
 		<tr class="">
-			<td class='text-center' style='padding-top: 20px; padding-bottom: 20px;'>{{ item.id }}</td>
-			<td class='text-center' style='padding-top: 20px; padding-bottom: 20px;'>{{ item.date }}</td>
-			<td class='text-center' style='padding-top: 20px; padding-bottom: 20px;'>{{ item.status }}</td>
-			<td class='text-center' style='padding-top: 20px; padding-bottom: 20px;'>{{ item.total }} $</td>
-			<td class='text-center' style='padding-top: 20px; padding-bottom: 20px;'><button type="button"
+			<td class='text-center p-3'>{{ item.id }}</td>
+			<td class='text-center p-3'>{{ item.date }}</td>
+			<td class='text-center p-3'>{{ item.status }}</td>
+			<td class='text-center p-3'>{{ item.total }} $</td>
+			<td class='text-center p-3'><button type="button"
 					class="btn btn-primary btn-md" data-toggle="modal" data-target="#myModal-{{ item.id }}">
 					Details
 				</button></td>

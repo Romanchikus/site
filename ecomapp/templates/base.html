@@ -291,6 +291,7 @@
 
 
     <script src='{% static "js/jquery.js" %}'></script>
+    <script src='{% static "js/bootstrap.js" %}'></script>
     <script>
         var first = true
         window.onload = function () {
@@ -423,8 +424,9 @@
         };
     </script>
 
-    <script src='{% static "js/bootstrap.js" %}'></script>
-
+{% block project_js %}
+  <script src={% static "js/main.js" %}></script>
+{% endblock project_js %}
 </body>
 
 </html>

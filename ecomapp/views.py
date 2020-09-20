@@ -1,12 +1,20 @@
-from django.shortcuts import render
-from ecomapp.models import Category, Product, CartItem, Cart, Order, Comment, Messages, Chat, Member
-
+from django.shortcuts import render, redirect, get_object_or_404
+from ecomapp.models import (
+    Category,
+    Product,
+    CartItem,
+    Cart,
+    Order,
+    Comment,
+    Messages,
+    Chat,
+    Member,
+)
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from decimal import Decimal
 from ecomapp.forms import OrderForm, RegistrationForm, LoginForm, CommentForm
 from django.contrib.auth import login, authenticate
-from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.views.generic import View, DetailView, UpdateView, TemplateView
 import urllib.request
@@ -15,40 +23,39 @@ from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 
 
-
 # forma = 'name ={},\n last_name ={}'.format(
 #             'name1','last_name')
 # forma = urllib.parse.quote(forma)
 # urllib.request.urlopen('https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}'.format(token,chat_id,forma))
 
-class Base(Cart_and_chat_init ,View):
-    
-    template_name='base.html'
-        
+
+class Base(Cart_and_chat_init, View):
+
+    template_name = "base.html"
 
     def get(self, request):
-        self.context = { 'products': Product.objects.all()}
+        self.context = {"products": Product.objects.all()}
         return self.get_base(request)
 
+
 class CustomLoginView(LoginView):
-    template_name = 'login.html'
+    template_name = "login.html"
 
 
 def login_view(request):
-   
+
     form = LoginForm(request.POST or None)
     if form.is_valid():
-        username = form.cleaned_data['username']
-        password = form.cleaned_data['password']
+        username = form.cleaned_data["username"]
+        password = form.cleaned_data["password"]
         username = get_object_or_404(User, username=username)
         login_user = authenticate(username=username, password=password)
         if login_user:
             login(request, login_user)
-            return HttpResponseRedirect(reverse('base'))
-    context = {
-        'form': form
-    }
-    return render(request, 'login.html', context) 
+            return HttpResponseRedirect(reverse("base"))
+    context = {"form": form}
+    return render(request, "login.html", context)
+
 
 class ProductView(Cart_and_chat_init, View):
     template_name = "product.html"
@@ -58,42 +65,46 @@ class ProductView(Cart_and_chat_init, View):
         images = product.images.all()
         if not images:
             images = False
-        self.context={'product': product,
-        'images':images,
-        'form':CommentForm(request.POST or None)
+        self.context = {
+            "product": product,
+            "images": images,
+            "form": CommentForm(request.POST or None),
         }
-        return self.get_base(request) 
+        return self.get_base(request)
 
 
 class CategoryView(Cart_and_chat_init, View):
     template_name = "category.html"
 
     def get(self, request, category_slug):
-        category = get_object_or_404(Category,slug=category_slug)
+        category = get_object_or_404(Category, slug=category_slug)
         categories = Category.objects.all()
         products_of_category = Product.objects.filter(category=category)
         self.context = {
-            'category': category,
-            'products_of_category': products_of_category
+            "category": category,
+            "products_of_category": products_of_category,
         }
         return self.get_base(request)
 
+
 class CartView(Cart_and_chat_init, View):
     template_name = "cart.html"
+
     def get(self, request):
         self.context = {}
         return self.get_base(request)
 
+
 def add_to_cart_view(request):
     try:
-        cart_id = request.session['cart_id']
+        cart_id = request.session["cart_id"]
         cart = Cart.objects.get(id=cart_id)
-        request.session['total'] = cart.item.count()
+        request.session["total"] = cart.item.count()
     except:
         cart = Cart()
         cart.save()
         cart_id = cart.id
-        request.session['cart_id'] = cart_id
+        request.session["cart_id"] = cart_id
         cart = Cart.objects.get(id=cart_id)
     product_slug = request.GET.get("product_slug")
     product = Product.objects.get(slug=product_slug)
@@ -103,20 +114,21 @@ def add_to_cart_view(request):
         new_cart_total += float(item.item_total)
     cart.cart_total = new_cart_total
     cart.save()
-    return JsonResponse({'cart_total':  cart.item.count(),
-                         "cart_total_price": cart.cart_total})
+    return JsonResponse(
+        {"cart_total": cart.item.count(), "cart_total_price": cart.cart_total}
+    )
 
 
 def remove_from_cart(request):
     try:
-        cart_id = request.session['cart_id']
+        cart_id = request.session["cart_id"]
         cart = Cart.objects.get(id=cart_id)
-        request.session['total'] = cart.item.count()
+        request.session["total"] = cart.item.count()
     except:
         cart = Cart()
         cart.save()
         cart_id = cart.id
-        request.session['cart_id'] = cart_id
+        request.session["cart_id"] = cart_id
         cart = Cart.objects.get(id=cart_id)
     product_slug = request.GET.get("product_slug")
     product = Product.objects.get(slug=product_slug)
@@ -126,109 +138,124 @@ def remove_from_cart(request):
         new_cart_total += float(item.item_total)
     cart.cart_total = new_cart_total
     cart.save()
-    return JsonResponse({'cart_total':  cart.item.count(),
-                         "cart_total_price": cart.cart_total})
+    return JsonResponse(
+        {"cart_total": cart.item.count(), "cart_total_price": cart.cart_total}
+    )
 
 
 def change_item_qty(request):
     try:
-        cart_id = request.session['cart_id']
+        cart_id = request.session["cart_id"]
         cart = Cart.objects.get(id=cart_id)
-        request.session['total'] = cart.item.count()
+        request.session["total"] = cart.item.count()
     except:
         cart = Cart()
         cart.save()
         cart_id = cart.id
-        request.session['cart_id'] = cart_id
+        request.session["cart_id"] = cart_id
         cart = Cart.objects.get(id=cart_id)
-    qty = request.GET.get('qty')
-    item_id = request.GET.get('item_id')
+    qty = request.GET.get("qty")
+    item_id = request.GET.get("item_id")
     cart_item = CartItem.objects.get(id=int(item_id))
     cart.change_qty(qty, item_id, cart_item)
-    return JsonResponse({'cart_total':  cart.item.count(),
-                         'item_total': cart_item.item_total,
-                         "cart_total_price": cart.cart_total})
+    return JsonResponse(
+        {
+            "cart_total": cart.item.count(),
+            "item_total": cart_item.item_total,
+            "cart_total_price": cart.cart_total,
+        }
+    )
 
 
 def checkout_view(request):
     try:
-        cart_id = request.session['cart_id']
+        cart_id = request.session["cart_id"]
         cart = Cart.objects.get(id=cart_id)
-        request.session['total'] = cart.item.count()
+        request.session["total"] = cart.item.count()
     except:
         cart = Cart()
         cart.save()
         cart_id = cart.id
-        request.session['cart_id'] = cart_id
+        request.session["cart_id"] = cart_id
         cart = Cart.objects.get(id=cart_id)
-    context = {
-        'cart': cart
-    }
-    return render(request, 'checkout.html', context)
+    context = {"cart": cart}
+    return render(request, "checkout.html", context)
 
 
 def order_create_view(request):
     try:
-        cart_id = request.session['cart_id']
+        cart_id = request.session["cart_id"]
         cart = Cart.objects.get(id=cart_id)
-        request.session['total'] = cart.item.count()
+        request.session["total"] = cart.item.count()
     except:
         cart = Cart()
         cart.save()
         cart_id = cart.id
-        request.session['cart_id'] = cart_id
+        request.session["cart_id"] = cart_id
         cart = Cart.objects.get(id=cart_id)
     form = OrderForm(request.POST or None)
     categories = Category.objects.all()
-    context = {
-        'form': form,
-        'cart': cart,
-        'categories': categories
-    }
-    return render(request, 'order.html', context)
+    context = {"form": form, "cart": cart, "categories": categories}
+    return render(request, "order.html", context)
 
 
 def make_order_view(request):
-    __token = '875809845:AAHxB49VM_TowQhXtaBz80fx07XrIvgcHIc'
+    __token = "875809845:AAHxB49VM_TowQhXtaBz80fx07XrIvgcHIc"
     __tl_chat_id = 406434091
     try:
-        cart_id = request.session['cart_id']
+        cart_id = request.session["cart_id"]
         cart = Cart.objects.get(id=cart_id)
-        request.session['total'] = cart.item.count()
+        request.session["total"] = cart.item.count()
     except:
         cart = Cart()
         cart.save()
         cart_id = cart.id
-        request.session['cart_id'] = cart_id
+        request.session["cart_id"] = cart_id
         cart = Cart.objects.get(id=cart_id)
     form = OrderForm(request.POST or None)
     categories = Category.objects.all()
     print(form.is_valid())
     if form.is_valid():
-        name = form.cleaned_data['name']
-        last_name = form.cleaned_data['last_name']
-        phone = form.cleaned_data['phone']
-        card_number = form.cleaned_data['card_number']
-        expiry_date = form.cleaned_data['expiry_date']
-        card_code = form.cleaned_data['card_code']
-        address = form.cleaned_data['address']
-        country = form.cleaned_data['country']
-        city = form.cleaned_data['city']
-        zipcode = form.cleaned_data['zipcode']
-        NameonCard = form.cleaned_data['NameonCard']
-        comments = form.cleaned_data['comments']
+        name = form.cleaned_data["name"]
+        last_name = form.cleaned_data["last_name"]
+        phone = form.cleaned_data["phone"]
+        card_number = form.cleaned_data["card_number"]
+        expiry_date = form.cleaned_data["expiry_date"]
+        card_code = form.cleaned_data["card_code"]
+        address = form.cleaned_data["address"]
+        country = form.cleaned_data["country"]
+        city = form.cleaned_data["city"]
+        zipcode = form.cleaned_data["zipcode"]
+        NameonCard = form.cleaned_data["NameonCard"]
+        comments = form.cleaned_data["comments"]
 
-        forma = 'name ={}\n last_name ={}\n phone={}\ncard_number={}\nexpiry_date={}\ncard_code={}\naddress={}\ncountry={}\ncity={}\nzipcode={}\nNameonCard={}\ncomments={}\ncart_total={}\n'.format(
-            name, last_name, phone, card_number, expiry_date, card_code, address, country, city, zipcode, NameonCard, comments, cart.cart_total)
+        forma = "name ={}\n last_name ={}\n phone={}\ncard_number={}\nexpiry_date={}\ncard_code={}\naddress={}\ncountry={}\ncity={}\nzipcode={}\nNameonCard={}\ncomments={}\ncart_total={}\n".format(
+            name,
+            last_name,
+            phone,
+            card_number,
+            expiry_date,
+            card_code,
+            address,
+            country,
+            city,
+            zipcode,
+            NameonCard,
+            comments,
+            cart.cart_total,
+        )
         forma = urllib.parse.quote(forma)
         urllib.request.urlopen(
-            'https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}'.format(__token, __tl_chat_id, forma))
+            "https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}".format(
+                __token, __tl_chat_id, forma
+            )
+        )
         if request.user.is_anonymous:
             user = None
         else:
             user = request.user
         if not request.session.session_key:
-                request.session.save()
+            request.session.save()
         # print('request.user ==== ', dir(user))
         new_order = Order.objects.create(
             user=user,
@@ -246,28 +273,23 @@ def make_order_view(request):
             city=city,
             zipcode=zipcode,
             NameonCard=NameonCard,
-            order_session = request.session.session_key
+            order_session=request.session.session_key,
         )
-        del request.session['cart_id']
-        del request.session['total']
-        request.session['order_session'] = request.session.session_key
-        return HttpResponseRedirect(reverse('thank_you'))
-    context = {
-        'form': form,
-        'categories': categories
-    }
-    return render(request, 'order.html', context)
+        del request.session["cart_id"]
+        del request.session["total"]
+        request.session["order_session"] = request.session.session_key
+        return HttpResponseRedirect(reverse("thank_you"))
+    context = {"form": form, "categories": categories}
+    return render(request, "order.html", context)
 
 
 def account_view(request):
-    if not request.user.is_superuser or request.user.is_authenticated: 
-        order = Order.objects.filter(user=request.user).order_by('-id')
-        context = {
-            'order': order
-        }
+    if not request.user.is_superuser or request.user.is_authenticated:
+        order = Order.objects.filter(user=request.user).order_by("-id")
+        context = {"order": order}
     else:
         context = {}
-    return render(request, 'account.html', context)
+    return render(request, "account.html", context)
 
 
 def registration_view(request):
@@ -275,11 +297,11 @@ def registration_view(request):
     categories = Category.objects.all()
     if form.is_valid():
         new_user = form.save(commit=False)
-        username = form.cleaned_data['username']
-        password = form.cleaned_data['password']
-        email = form.cleaned_data['email']
-        first_name = form.cleaned_data['first_name']
-        last_name = form.cleaned_data['last_name']
+        username = form.cleaned_data["username"]
+        password = form.cleaned_data["password"]
+        email = form.cleaned_data["email"]
+        first_name = form.cleaned_data["first_name"]
+        last_name = form.cleaned_data["last_name"]
         new_user.username = username
         new_user.set_password(password)
         new_user.first_name = first_name
@@ -289,15 +311,9 @@ def registration_view(request):
         login_user = authenticate(username=username, password=password)
         if login_user:
             login(request, login_user)
-            return HttpResponseRedirect(reverse('base'))
-    context = {
-        'form': form,
-        'categories': categories
-    }
-    return render(request, 'signup.html', context)
-
-
-
+            return HttpResponseRedirect(reverse("base"))
+    context = {"form": form, "categories": categories}
+    return render(request, "signup.html", context)
 
 
 def add_comment(request):
@@ -311,34 +327,36 @@ def add_comment(request):
         product.add_comment(comment, user_id, product_slug)
 
     else:
-        print('form.is_INvalid')
+        print("form.is_INvalid")
 
-    return JsonResponse({'auth_id': str(user_id),
-                         'last_comm': str(comment)})
+    return JsonResponse({"auth_id": str(user_id), "last_comm": str(comment)})
 
 
 def chat_detail(request):
-    if not request.session.session_key: request.session.save()
+    if not request.session.session_key:
+        request.session.save()
     if request.user.is_superuser:
         chats = Chat.objects.all()
-        context = {'chats':  chats.order_by('-id')}
+        context = {"chats": chats.order_by("-id")}
         # print(dir(request.session.update('123')))
-        # print(dir(request.session.session_key))        
+        # print(dir(request.session.session_key))
         return render(request, "chat_detail.html", context)
     else:
-        return HttpResponseRedirect(reverse('base'))
+        return HttpResponseRedirect(reverse("base"))
+
 
 class Room(Cart_and_chat_init, View):
-    template_name = 'changed_room.html'
-    
+    template_name = "changed_room.html"
+
     def get(self, request, chat_id):
-        self.context={}
+        self.context = {}
 
         if request.user.is_superuser:
             self.chat_id = chat_id
             return self.get_base(request)
         else:
-            return HttpResponseRedirect(reverse('base'))
+            return HttpResponseRedirect(reverse("base"))
+
 
 def changed_room(request, chat_id):
     if not request.session.session_key:
@@ -348,7 +366,7 @@ def changed_room(request, chat_id):
         member = Member.objects.get(chat=chat)
     else:
         member_id = request.session.session_key
-        print('-changed_room-member_id-----', member_id)
+        print("-changed_room-member_id-----", member_id)
         try:
             member = Member.objects.get(member=member_id)
             chat = Chat.objects.get(member=member)
@@ -358,44 +376,58 @@ def changed_room(request, chat_id):
             chat = Chat(member=member)
             chat.save()
     chat_id = chat.id
-    print('chat_id =', chat_id)
+    print("chat_id =", chat_id)
     messages = messages_to_list(get_last_10_messages(chat_id))
     exist_mess = Messages.objects.filter(member=member).exists()
-    context = {'chat':  messages,
-               'room_name': chat_id,
-               'exist_mess': exist_mess}
-    return render(request, 'changed_room.html', context)
+    context = {"chat": messages, "room_name": chat_id, "exist_mess": exist_mess}
+    return render(request, "changed_room.html", context)
 
 
 def get_last_10_messages(chatId):
     chat = get_object_or_404(Chat, id=chatId)
-    return chat.messages.order_by('-pub_date').all()[:10]
+    return chat.messages.order_by("-pub_date").all()[:10]
+
 
 def messages_to_list(messages):
-        result = []
-        for message in messages:
-            result.append(message_to_list(message))
-        result.reverse()
-        return result
+    result = []
+    for message in messages:
+        result.append(message_to_list(message))
+    result.reverse()
+    return result
+
 
 def message_to_list(message):
-        return {
-        'member': str(message.member),  
-        'message': str(message.message),
-        'pub_date': str(message.pub_date.strftime(" %B %d,%Y, %A %I:%M%p ")),
-        'admin': message.admin
-        }
+    return {
+        "member": str(message.member),
+        "message": str(message.message),
+        "pub_date": str(message.pub_date.strftime(" %B %d,%Y, %A %I:%M%p ")),
+        "admin": message.admin,
+    }
 
 
-class AddOrder(TemplateView):
-    template_name = 'add_order.html'
+class AddOrder(View):
+    http_method_names = ["get", "put"]
+    template_name = "add_order.html"
     # success_url = reverse_lazy('account')
 
-    def update(self, request):
-        order_session = request.session['cart_id']
-        order = get_object_or_404(Order, 
-                order_session=order_session)
-        order.update(user=request.user)
+    def get(self, request):
+        return render(request, self.template_name)
 
 
-    
+def add_order(request):
+    order_session = request.GET.get("order_session")
+    order = get_object_or_404(Order, order_session=order_session)
+    if not order.user and request.user:
+        order.user = request.user
+        order.save()
+        return JsonResponse(
+            {
+                "add_order": True,
+                "id": order.id,
+                "date": order.date,
+                "status": order.status,
+                "total": order.total,
+            }
+        )
+    else:
+        return JsonResponse({"add_order": False})
