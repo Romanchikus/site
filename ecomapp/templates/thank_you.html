@@ -22,10 +22,13 @@
 					Copy text</button>
 			</div>
 		</div>
-
+		
 	</div>
-	{%endif%}
+	
 	<p class='text-center'><a href='/'><button class='btn nav-hr'>Back to shopping</button></a></p>
+	{% else %}
+	<p class='text-center'><a href='{% url "account" %}'><button class='btn nav-hr'>See your orders</button></a></p>
+	{%endif%}
 </div>
 <script src='{% static "js/thank_you.js" %}'></script>
 {% endblock content %}
