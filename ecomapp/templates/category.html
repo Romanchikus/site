@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {%load static%}
 {% load functions %}
+{% block title %}{{ category.name }}{% endblock %}
 {%block content%}
 <div class="col-12">
     <h2 class="text-center"> {{ category.name }} </h2>
@@ -27,7 +28,7 @@
                         {% endif %}
                         {% if not request.user.is_authenticated %}
                         <p class = 'text-center'> Only authorized users can order goods. You are welcome,
-                            <a href='{% url "login" %}'> sign in </a> or <a href='{% url "registration" %}'> sign up </a>
+                            <a href='{% url "login" %}'> sign in </a> or <a href='{% url "signup" %}'> sign up </a>
                         </p>
                 {% endif %}
                 </div>                

@@ -2,11 +2,11 @@ from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 import ecomapp.routing
 
-application = ProtocolTypeRouter({
-    # (http->django views is added by default)
-    'websocket': AuthMiddlewareStack(
-        URLRouter(
-            ecomapp.routing.websocket_urlpatterns
-        )
-    ),
-})
+application = ProtocolTypeRouter(
+    {
+        # (http->django views is added by default)
+        "websocket": AuthMiddlewareStack(
+            URLRouter(ecomapp.routing.websocket_urlpatterns)
+        ),
+    }
+)

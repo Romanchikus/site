@@ -12,10 +12,18 @@
 .navbar{
     background-color: #A0434E;
 }
+.container-product {
+    display: flex;
+}
+/* 
+.container-produc .row{
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+} */
 
 @media screen and (min-width: 800px) {
     .container-product .row_prod {
-        margin-left: 15px;
+        margin-right: 15px !important;
     }
 }
 
@@ -26,14 +34,34 @@
     }
 }
 
-li a {
-    color: #ffffff !important;
-    text-decoration-style: solid;
+.site-txt{
+    color: #324E75 !important;
+    text-shadow: 1px 1px 2px #a0434e9a !important;
 }
-li a:hover{
-    color: #ffffff;
-    background-color: #324E75;
+
+h1, h2, h3{
+    color: #324E75 !important;
+    text-shadow: 1px 1px 2px #a0434e9a !important;
+}
+
+.nav-hr{
+    color: #ffffff !important;
+    background-color: #324E75 !important;
     border-radius:  1em 0em !important;
+    border-color: #a0434e9a !important;
+    padding: 6px;
+    border-width: 3px !important;
+    border-color: #1b021b2a !important; 
+}
+
+.nav-hr:hover {
+    border-color: #d61dd69a !important; 
+}
+
+@media screen and (max-width: 768px){
+    .nav-hr .hr-txt{
+        display: none;
+    }
 }
 
 .control_style{
@@ -48,7 +76,7 @@ li a:hover{
 .custom_title{
     border: 0.1em solid !important;
     background-color: #324E75;
-    border-color: black !important;
+    border-color: rgba(0, 0, 0, 0.301) !important;
     border-radius:  1em 0em !important;
 }
 
@@ -98,13 +126,13 @@ li a:hover{
     border-color: #324E75 !important;
 }
 
+
 .product_base h4 a{
     color: #324E75;
     text-shadow: 1px 1px 1px #A0434E ;
 }
 
 .d_c_h {
-    /* width:300px; */
     position: fixed;
     bottom: 10px;
     left: 0px;
@@ -383,35 +411,7 @@ li a:hover{
     display: block;
 }
 
-.dropdown-menu {
-    background: -webkit-gradient(linear, left top, left 25, from(#E17D7B), color-stop(4%, #390E0D), to(#E17D7B));
-    background: -moz-linear-gradient(top, #E17D7B, #390E0D 1px, #E17D7B 25px);
-    color: white;
-}
 
-.dropdown-menu li>a {
-    color: #fff;
-}
-
-.dropdown-menu>li {
-    background: #D9534F;
-    border-bottom: 1px solid #791C1A;
-    border-left: 2px solid #791C1A;
-    border-right: 2px solid #791C1A;
-}
-
-.dropdown-menu li>a:hover {
-    background: #D9534F;
-}
-
-.dropdown-menu>li>.divider {
-    background-color: #D9534F;
-    border: 10px solid #791C1A;
-}
-
-html {
-    height: 100%;
-}
 
 body {
     margin: 0;
@@ -556,13 +556,9 @@ body::after {
     bottom: 0;
     width: 100%;
     height: 50px;
+    left: 0px;
 }
 
-li {
-    list-style-type: none;
-    /* Убираем маркеры */
-    margin-left: 20px;
-}
 
 
 

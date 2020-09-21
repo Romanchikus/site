@@ -3,6 +3,7 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
+{% block title %} Make order {% endblock %}
 <form action='{% url "make_order" %}' method="POST">
 		{% csrf_token %}
 		<!-- {{ form|crispy }} -->
@@ -39,7 +40,6 @@
 
 	{{ form.zipcode|as_crispy_field }}
 	{{ form.NameonCard|as_crispy_field }}
-	{{ form.CreditCardType|as_crispy_field }}
 	{{ form.comments|as_crispy_field }}
 
 	<div id="myModal" class="modal fade" tabindex="-1"	>

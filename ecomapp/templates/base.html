@@ -9,8 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-
-    <title>Love*Shop </title>
+    <link rel="shortcut icon" href="/media/favicon.png" type="image/png">
+    <title>{% block title %}Love*Shop{% endblock %} </title>
 
     <!-- Bootstrap core CSS -->
     <link href='{% static "css/r1.css" %}' rel="stylesheet">
@@ -28,7 +28,7 @@
 
 
     <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container">
+        <div class="container ">
             <a class="navbar-brand custom_title text-light" href="{% url 'base' %}">Love*Shop</a>
             {% if not request.get_full_path == '/' %}
             <div class="dropdown">
@@ -43,66 +43,36 @@
                     {% endfor %}
                 </ul>
             </div>
-
             {% endif %}
-            <div class="navbar-nav text-center">
-                {% if not request.user.is_authenticated %}
-                <li class="ti nav-link">
-                    Hi user!
-                </li>
-                <li>
-                    <a class="ti nav-link" href='{% url "login" %}'>Log in
-                        <span class="oi" data-glyph="account-login"></span>
-                    </a>
-                </li>
-                <li>
-                    <a class="ti nav-link" href='{% url "registration" %}'>Registration
-                        <span class="oi" data-glyph="flag"></span>
-                    </a>
-                </li>
-
-                {% else %}
-
-                <li>
-                    <a class="ti nav-link" href="{% url 'account' %}">Cabinet {{ request.user }}
-                        <span class="oi" data-glyph="home"></span>
-                    </a>
-                </li>
-                <li>
-                    <a class="ti  nav-link" href="{% url 'logout' %}"> Logout
-                        <span class="oi" data-glyph="account-logout"></span>
-                    </a>
-
-                </li>
-                {% if user.is_superuser %}
-                <li>
-                    <a class="ti  nav-link" href="{% url 'chat_detail'  %}"> Admin Chats
-                        <span class="oi" data-glyph="account-logout"></span>
-                    </a>
-
-                </li>
-                {% endif %}
-                {% endif %}
-            </div>
-            <div class="navbar-nav ml-auto">
-
-                <li>
-                    <a class="nav-link" href="{% url 'cart' %}">
-                        Cart <span class="badge badge-success" id="cart_count">
-                            <span class="oi" data-glyph="cart"></span>
-                            {{ cart.item.count }}</span></a>
-                </li>
-            </div>
-
-
-            <div class="" id="navbarResponsive">
-
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-
-                    </li>
-                </ul>
-            </div>
+            {% if not request.user.is_authenticated %}
+            <a class="nav-hr btn btn-light " href='{% url "login" %}'><span class='hr-txt'> Sign
+                    in</span>
+                <span class="oi" data-glyph="account-login"></span>
+            </a>
+            <a class="nav-hr btn btn-light " href='{% url "signup" %}'><span class='hr-txt'>Sign
+                    up</span>
+                <span class="oi" data-glyph="flag"></span>
+            </a>
+            {% else %}
+            <a class="nav-hr btn btn-light " href="{% url 'logout' %}"> <span class='hr-txt'>Logout</span>
+                <span class="oi" data-glyph="account-logout"></span>
+            </a>
+            <a class="nav-hr btn btn-light " href="{% url 'account' %}"><span class='hr-txt'>Cabinet
+                    {{ request.user }}</span>
+                <span class="oi" data-glyph="home"></span>
+            </a>
+            {% if user.is_superuser %}
+            <a class="nav-hr btn btn-light " href="{% url 'chat_detail'  %}"> <span class='hr-txt'>Admin
+                    Chats</span>
+                <span class="oi" data-glyph="book"></span>
+            </a>
+            {% endif %}
+            {% endif %}
+            <a class="nav-hr btn btn-light " href="{% url 'cart' %}">
+                <span class='hr-txt'>Cart</span>
+                <span class="badge badge-success" id="cart_count">
+                    <span class="oi" data-glyph="cart"></span>
+                    {{ cart.item.count }}</span></a>
         </div>
     </nav>
     <div class="container">
@@ -319,9 +289,9 @@
     </div>
 
 
-    <!-- Bootstrap core JavaScript -->
 
     <script src='{% static "js/jquery.js" %}'></script>
+    <script src='{% static "js/bootstrap.js" %}'></script>
     <script>
         var first = true
         window.onload = function () {
@@ -454,8 +424,9 @@
         };
     </script>
 
-    <script src='{% static "js/bootstrap.js" %}'></script>
-
+{% block project_js %}
+  <script src={% static "js/main.js" %}></script>
+{% endblock project_js %}
 </body>
 
 </html>

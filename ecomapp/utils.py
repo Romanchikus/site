@@ -1,26 +1,36 @@
-from ecomapp.models import Category, Product, CartItem, Cart, Order, Comment, Messages, Chat, Member
+from ecomapp.models import (
+    Category,
+    Product,
+    CartItem,
+    Cart,
+    Order,
+    Comment,
+    Messages,
+    Chat,
+    Member,
+)
 from django.shortcuts import render
-
 
 
 class Cart_and_chat_init:
 
     chat_id = False
-    def get_base(self,request):
+
+    def get_base(self, request):
 
         chat, chat_id, exist_mess = self.chat_init(request)
         categories = Category.objects.all()
 
-        self.context = {**self.context,
-        'categories': categories,
-        'cart': self.cart(request),
-        'chat':  chat,
-        'room_name': chat_id,
-        'exist_mess': exist_mess
+        self.context = {
+            **self.context,
+            "categories": categories,
+            "cart": self.cart(request),
+            "chat": chat,
+            "room_name": chat_id,
+            "exist_mess": exist_mess,
         }
         return self.render(request)
 
-        
     def render(self, request):
         return render(request, self.template_name, self.context)
 
@@ -37,24 +47,22 @@ class Cart_and_chat_init:
             chat, _ = Chat.objects.get_or_create(member=member)
             chat.save()
 
-        
-        return chat.messages.order_by('pub_date').all()[:10], chat.id, Messages.objects.filter(member=member).exists()
-    
+        return (
+            chat.messages.order_by("pub_date").all()[:10],
+            chat.id,
+            Messages.objects.filter(member=member).exists(),
+        )
+
     def cart(self, request):
         try:
 
-            cart_id = request.session['cart_id']
+            cart_id = request.session["cart_id"]
             cart = Cart.objects.get(id=cart_id)
-            request.session['total'] = cart.item.count()
+            request.session["total"] = cart.item.count()
         except:
             cart = Cart()
             cart.save()
             cart_id = cart.id
-            request.session['cart_id'] = cart_id
+            request.session["cart_id"] = cart_id
             cart = Cart.objects.get(id=cart_id)
         return cart
-
-
-
-
-

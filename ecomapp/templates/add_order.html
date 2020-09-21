@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Update order {% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row m-3 justify-content-md-center">
+        <input class="center-block nav-hr col-sm-6 
+            col-lg-4 m-3" id="text_order" link='{% url "add_order" %}' type="text"
+            value="">
+        <a href='#' class=' center-block   
+        col-lg-1 btn nav-hr m-3 add_order'>
+            Update
+        </a>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="alert alert-info col-sm-5 text-center" style="display: none;" id="confirm" role="alert">
+            <div class="text-center message"></div>
+            <a href="{% url 'account' %}" class="ret_base alert-link"> > Account</a>
+        </div>
+    </div>
+</div>
+
+<div class="row order_table"  style="display: none;">
+	<table class='col-sm-8 col-lg-12 nav-hr '>
+		<tr class="">
+			<td class='text-center p-2'> Order number </td>
+			<td class='text-center p-2'> Order Date </td>
+			<td class='text-center p-2'> Order Status </td>
+			<td class='text-center p-2'> Order Cost </td>
+		</tr>
+		<tr class="">
+			<td class='text-center p-3 item_id'></td>
+			<td class='text-center p-3 item_date'></td>
+			<td class='text-center p-3 item_status'> </td>
+			<td class='text-center p-3 item_total'> <span>$</span></td>
+		</tr>
+	</table>
+</div>
+
+
+{% endblock content %}
+
+{% block project_js %}
+<script src='{% static "js/jquery.js" %}'></script>
+<script src='{% static "js/bootstrap.js" %}'></script>
+<script src='{% static "js/add_order.js" %}'></script>
+{% endblock %}

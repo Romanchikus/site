@@ -3,6 +3,7 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
+{% block title %} Make order{% endblock %}
 <form action='{% url "make_order_card" %}' method="POST">
 		{% csrf_token %}
 		<div class="row" >
